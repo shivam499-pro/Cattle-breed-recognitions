@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expert Dashboard - Cattle Breed Recognition</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #1a5f2a;
+            --secondary-color: #f8f9fa;
+            --accent-color: #ffc107;
+            --danger-color: #dc3545;
+            --success-color: #28a745;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+        }
+        
+        .navbar {
+            background-color: var(--primary-color);
+        }
+        
+        .sidebar {
+            background-color: white;
+            min-height: calc(100vh - 56px);
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+        }
+        
+        .sidebar .nav-link {
+            color: #333;
+            padding: 12px 20px;
+            border-left: 3px solid transparent;
+        }
+        
+        .sidebar .nav-link:hover,
+        .sidebar .nav-link.active {
+            background-color: #e8f5e9;
+            border-left-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-card .icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+        
+        .case-card {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border-left: 4px solid var(--accent-color);
+        }
+        
+        .case-card.urgent {
+            border-left-color: var(--danger-color);
+        }
+        
+        .case-card.resolved {
+            border-left-color: var(--success-color);
+        }
+        
+        .confidence-bar {
+            height: 8px;
+            border-radius: 4px;
+            background-color: #e9ecef;
+            overflow: hidden;
+        }
+        
+        .confidence-bar .fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.3s;
+        }
+        
+        .breed-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin: 2px;
+        }
+        
+        .breed-cattle {
+            background-color: #e3f2fd;
+            color: #1565c0;
+        }
+        
+        .breed-buffalo {
+            background-color: #fff3e0;
+            color: #e65100;
+        }
+        
+        .breed-cross {
+            background-color: #f3e5f5;
+            color: #7b1fa2;
+        }
+        
+        .image-preview {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 8px;
+            object-fit: contain;
+            background-color: #f5f5f5;
+        }
+        
+        .modal-body {
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+        
+        .prediction-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .prediction-item:last-child {
+            border-bottom: none;
+        }
+        
+        .status-badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        
+        .status-pending {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        
+        .status-resolved {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .status-escalated {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        .breed-select {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .loading-spinner {
+            display: none;
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .toast-container {
+            position: fixed;
+            top: 70px;
+            right: 20px;
+            z-index: 1050;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <i class="bi bi-heart-pulse me-2"></i>
+                Cattle Breed Recognition - Expert Dashboard
+            </a>
+            <div class="d-flex align-items-center">
+                <span class="text-white me-3">
+                    <i class="bi bi-person-circle me-1"></i>
+                    <span id="expertName">Dr. Expert</span>
+                </span>
+                <button class="btn btn-outline-light btn-sm" onclick="logout()">
+                    <i class="bi bi-box-arrow-right"></i> Logout
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-2 sidebar p-0">
+                <nav class="nav flex-column">
+                    <a class="nav-link active" href="#" onclick="showSection('dashboard')">
+                        <i class="bi bi-speedometer2 me-2"></i> Dashboard
+                    </a>
+                    <a class="nav-link" href="#" onclick="showSection('pending')">
+                        <i class="bi bi-clock-history me-2"></i> Pending Reviews
+                        <span class="badge bg-warning text-dark ms-auto" id="pendingCount">0</span>
+                    </a>
+                    <a class="nav-link" href="#" onclick="showSection('resolved')">
+                        <i class="bi bi-check-circle me-2"></i> Resolved Cases
+                    </a>
+                    <a class="nav-link" href="#" onclick="showSection('statistics')">
+                        <i class="bi bi-bar-chart me-2"></i> Statistics
+                    </a>
+                    <a class="nav-link" href="#" onclick="showSection('settings')">
+                        <i class="bi bi-gear me-2"></i> Settings
+                    </a>
+                </nav>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-10 p-4">
+                <!-- Dashboard Section -->
+                <div id="dashboardSection">
+                    <h4 class="mb-4">Dashboard Overview</h4>
+                    
+                    <!-- Stats Cards -->
+                    <div class="row mb-4">
+                        <div class="col-md-3">
+                            <div class="stat-card">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <h6 class="text-muted">Pending Reviews</h6>
+                                        <h2 id="statPending">0</h2>
+                                    </div>
+                                    <div class="icon bg-warning bg-opacity-25 text-warning">
+                                        <i class="bi bi-hourglass-split"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-card">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <h6 class="text-muted">Resolved Today</h6>
+                                        <h2 id="statResolvedToday">0</h2>
+                                    </div>
+                                    <div class="icon bg-success bg-opacity-25 text-success">
+                                        <i class="bi bi-check-circle"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-card">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <h6 class="text-muted">Total Resolved</h6>
+                                        <h2 id="statTotalResolved">0</h2>
+                                    </div>
+                                    <div class="icon bg-primary bg-opacity-25 text-primary">
+                                        <i class="bi bi-clipboard-check"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-card">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <h6 class="text-muted">Avg Response Time</h6>
+                                        <h2 id="statAvgTime">-</h2>
+                                    </div>
+                                    <div class="icon bg-info bg-opacity-25 text-info">
+                                        <i class="bi bi-clock"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Cases -->
+                    <div class="card">
+                        <div class="card-header bg-white">
+                            <h5 class="mb-0">Recent Pending Cases</h5>
+                        </div>
+                        <div class="card-body" id="recentCasesList">
+                            <div class="loading-spinner" id="loadingSpinner"></div>
+                            <p class="text-muted text-center">Loading cases...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pending Section -->
+                <div id="pendingSection" style="display: none;">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h4>Pending Reviews</h4>
+                        <div>
+                            <select class="form-select form-select-sm d-inline-block w-auto" id="sortFilter">
+                                <option value="date">Sort by Date</option>
+                                <option value="confidence">Sort by Confidence</option>
+                                <option value="animal">Sort by Animal ID</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="pendingCasesList"></div>
+                </div>
+
+                <!-- Resolved Section -->
+                <div id="resolvedSection" style="display: none;">
+                    <h4 class="mb-4">Resolved Cases</h4>
+                    <div id="resolvedCasesList"></div>
+                </div>
+
+                <!-- Statistics Section -->
+                <div id="statisticsSection" style="display: none;">
+                    <h4 class="mb-4">Statistics & Analytics</h4>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">Breed Distribution</div>
+                                <div class="card-body">
+                                    <canvas id="breedChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">Confidence Distribution</div>
+                                <div class="card-body">
+                                    <canvas id="confidenceChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Settings Section -->
+                <div id="settingsSection" style="display: none;">
+                    <h4 class="mb-4">Settings</h4>
+                    <div class="card">
+                        <div class="card-body">
+                            <form>
+                                <div class="mb-3">
+                                    <label class="form-label">Expert Name</label>
+                                    <input type="text" class="form-control" id="settingsExpertName" value="Dr. Expert">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Expert ID</label>
+                                    <input type="text" class="form-control" id="settingsExpertId" value="VET001">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Notification Preferences</label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="notifyEmail" checked>
+                                        <label class="form-check-label" for="notifyEmail">Email notifications</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="notifySms">
+                                        <label class="form-check-label" for="notifySms">SMS notifications</label>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-primary" onclick="saveSettings()">Save Settings</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Review Modal -->
+    <div class="modal fade" id="reviewModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Review Case</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>Animal Image</h6>
+                            <img id="modalImage" class="image-preview mb-3" src="" alt="Animal Image">
+                            
+                            <h6>Case Details</h6>
+                            <table class="table table-sm">
+                                <tr>
+                                    <td>Escalation ID:</td>
+                                    <td id="modalEscalationId">-</td>
+                                </tr>
+                                <tr>
+                                    <td>Animal ID:</td>
+                                    <td id="modalAnimalId">-</td>
+                                </tr>
+                                <tr>
+                                    <td>Created:</td>
+                                    <td id="modalCreated">-</td>
+                                </tr>
+                                <tr>
+                                    <td>FLW Notes:</td>
+                                    <td id="modalFlwNotes">-</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>AI Predictions</h6>
+                            <div id="modalPredictions"></div>
+                            
+                            <hr>
+                            
+                            <h6>Your Decision</h6>
+                            <div class="mb-3">
+                                <label class="form-label">Select Breed</label>
+                                <select class="form-select breed-select" id="modalBreedSelect">
+                                    <option value="">-- Select Breed --</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Notes</label>
+                                <textarea class="form-control" id="modalExpertNotes" rows="3" 
+                                    placeholder="Add your observations..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-success" onclick="resolveCase()">
+                        <i class="bi bi-check-circle me-1"></i> Confirm & Resolve
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // API Base URL
+        const API_BASE = window.location.origin;
+        
+        // Breeds list
+        const BREEDS = [
+            'Gir', 'Sahiwal', 'Red_Sindhi', 'Tharparkar', 'Rathi',
+            'Hariana', 'Kankrej', 'Ongole', 'Deoni',
+            'Hallikar', 'Amritmahal', 'Khillari', 'Kangayam', 'Bargur',
+            'Dangi', 'Krishna_Valley', 'Malnad_Gidda', 'Punganur', 'Vechur',
+            'Pulikulam', 'Umblachery', 'Toda', 'Kalahandi',
+            'Murrah', 'Jaffrabadi', 'Nili_Ravi', 'Banni', 'Pandharpuri',
+            'Mehsana', 'Surti', 'Nagpuri', 'Bhadawari', 'Chilika',
+            'Jersey_Cross', 'HF_Cross'
+        ];
+        
+        // Current case being reviewed
+        let currentCase = null;
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            loadDashboard();
+            populateBreedSelect();
+        });
+        
+        // Show section
+        function showSection(section) {
+            // Hide all sections
+            document.querySelectorAll('[id$="Section"]').forEach(el => {
+                el.style.display = 'none';
+            });
+            
+            // Show selected section
+            document.getElementById(section + 'Section').style.display = 'block';
+            
+            // Update nav
+            document.querySelectorAll('.sidebar .nav-link').forEach(el => {
+                el.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Load section data
+            if (section === 'pending') loadPendingCases();
+            if (section === 'resolved') loadResolvedCases();
+            if (section === 'statistics') loadStatistics();
+        }
+        
+        // Load dashboard
+        async function loadDashboard() {
+            try {
+                const response = await fetch(`${API_BASE}/expert/pending`);
+                const data = await response.json();
+                
+                // Update stats
+                document.getElementById('statPending').textContent = data.total;
+                document.getElementById('pendingCount').textContent = data.total;
+                
+                // Display recent cases
+                displayCases(data.cases.slice(0, 5), 'recentCasesList');
+                
+            } catch (error) {
+                console.error('Error loading dashboard:', error);
+                showToast('Error loading dashboard', 'danger');
+            }
+        }
+        
+        // Load pending cases
+        async function loadPendingCases() {
+            try {
+                const response = await fetch(`${API_BASE}/expert/pending`);
+                const data = await response.json();
+                displayCases(data.cases, 'pendingCasesList');
+            } catch (error) {
+                console.error('Error loading pending cases:', error);
+            }
+        }
+        
+        // Load resolved cases
+        async function loadResolvedCases() {
+            // In production, fetch from API
+            document.getElementById('resolvedCasesList').innerHTML = `
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle me-2"></i>
+                    Resolved cases will appear here.
+                </div>
+            `;
+        }
+        
+        // Display cases
+        function displayCases(cases, containerId) {
+            const container = document.getElementById(containerId);
+            
+            if (cases.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center text-muted py-4">
+                        <i class="bi bi-check-circle display-4"></i>
+                        <p class="mt-2">No pending cases!</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            let html = '';
+            cases.forEach(case => {
+                const predictions = case.top_predictions || [];
+                const topPrediction = predictions[0] || { breed: 'Unknown', confidence: 0 };
+                
+                html += `
+                    <div class="case-card">
+                        <div class="row align-items-center">
+                            <div class="col-md-3">
+                                <span class="status-badge status-pending">
+                                    <i class="bi bi-clock me-1"></i> Pending
+                                </span>
+                                <p class="mt-2 mb-0 small text-muted">
+                                    <i class="bi bi-calendar me-1"></i>
+                                    ${new Date(case.created_at).toLocaleString()}
+                                </p>
+                            </div>
+                            <div class="col-md-4">
+                                <h6 class="mb-1">AI Prediction</h6>
+                                <span class="breed-badge ${getBreedClass(topPrediction.breed)}">
+                                    ${topPrediction.breed}
+                                </span>
+                                <div class="confidence-bar mt-2" style="width: 150px;">
+                                    <div class="fill bg-warning" style="width: ${topPrediction.confidence * 100}%"></div>
+                                </div>
+                                <small class="text-muted">${(topPrediction.confidence * 100).toFixed(1)}% confidence</small>
+                            </div>
+                            <div class="col-md-3">
+                                <small class="text-muted">Animal ID:</small>
+                                <p class="mb-0">${case.animal_id || 'N/A'}</p>
+                            </div>
+                            <div class="col-md-2 text-end">
+                                <button class="btn btn-primary btn-sm" onclick="openReview('${case.escalation_id}')">
+                                    <i class="bi bi-eye me-1"></i> Review
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+        
+        // Open review modal
+        async function openReview(escalationId) {
+            try {
+                // Fetch case details
+                const response = await fetch(`${API_BASE}/expert/pending`);
+                const data = await response.json();
+                currentCase = data.cases.find(c => c.escalation_id === escalationId);
+                
+                if (!currentCase) {
+                    showToast('Case not found', 'danger');
+                    return;
+                }
+                
+                // Populate modal
+                document.getElementById('modalEscalationId').textContent = currentCase.escalation_id;
+                document.getElementById('modalAnimalId').textContent = currentCase.animal_id || 'N/A';
+                document.getElementById('modalCreated').textContent = new Date(currentCase.created_at).toLocaleString();
+                document.getElementById('modalFlwNotes').textContent = currentCase.flw_notes || 'No notes provided';
+                
+                // Display predictions
+                const predictionsHtml = (currentCase.top_predictions || []).map((pred, idx) => `
+                    <div class="prediction-item">
+                        <span>
+                            <span class="breed-badge ${getBreedClass(pred.breed)}">${pred.breed}</span>
+                            ${idx === 0 ? '<span class="badge bg-primary ms-1">Top</span>' : ''}
+                        </span>
+                        <span class="text-muted">${(pred.confidence * 100).toFixed(1)}%</span>
+                    </div>
+                `).join('');
+                document.getElementById('modalPredictions').innerHTML = predictionsHtml;
+                
+                // Set default breed selection
+                if (currentCase.top_predictions && currentCase.top_predictions.length > 0) {
+                    document.getElementById('modalBreedSelect').value = currentCase.top_predictions[0].breed;
+                }
+                
+                // Show modal
+                new bootstrap.Modal(document.getElementById('reviewModal')).show();
+                
+            } catch (error) {
+                console.error('Error opening review:', error);
+                showToast('Error loading case details', 'danger');
+            }
+        }
+        
+        // Resolve case
+        async function resolveCase() {
+            const breed = document.getElementById('modalBreedSelect').value;
+            const notes = document.getElementById('modalExpertNotes').value;
+            
+            if (!breed) {
+                showToast('Please select a breed', 'warning');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE}/expert/resolve`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        escalation_id: currentCase.escalation_id,
+                        resolved_breed: breed,
+                        expert_notes: notes,
+                        expert_id: 'VET001'
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    showToast('Case resolved successfully!', 'success');
+                    bootstrap.Modal.getInstance(document.getElementById('reviewModal')).hide();
+                    loadDashboard();
+                } else {
+                    showToast('Error resolving case', 'danger');
+                }
+                
+            } catch (error) {
+                console.error('Error resolving case:', error);
+                showToast('Error resolving case', 'danger');
+            }
+        }
+        
+        // Populate breed select
+        function populateBreedSelect() {
+            const select = document.getElementById('modalBreedSelect');
+            BREEDS.forEach(breed => {
+                const option = document.createElement('option');
+                option.value = breed;
+                option.textContent = breed.replace('_', ' ');
+                select.appendChild(option);
+            });
+        }
+        
+        // Get breed class for styling
+        function getBreedClass(breed) {
+            const cattleBreeds = ['Gir', 'Sahiwal', 'Red_Sindhi', 'Tharparkar', 'Rathi', 'Hariana', 'Kankrej', 'Ongole', 'Deoni', 'Hallikar', 'Amritmahal', 'Khillari', 'Kangayam', 'Bargur', 'Dangi', 'Krishna_Valley', 'Malnad_Gidda', 'Punganur', 'Vechur', 'Pulikulam', 'Umblachery', 'Toda', 'Kalahandi'];
+            const buffaloBreeds = ['Murrah', 'Jaffrabadi', 'Nili_Ravi', 'Banni', 'Pandharpuri', 'Mehsana', 'Surti', 'Nagpuri', 'Bhadawari', 'Chilika'];
+            
+            if (cattleBreeds.includes(breed)) return 'breed-cattle';
+            if (buffaloBreeds.includes(breed)) return 'breed-buffalo';
+            return 'breed-cross';
+        }
+        
+        // Show toast notification
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast show align-items-center text-white bg-${type} border-0`;
+            toast.innerHTML = `
+                <div class="d-flex">
+                    <div class="toast-body">${message}</div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                </div>
+            `;
+            document.getElementById('toastContainer').appendChild(toast);
+            
+            setTimeout(() => toast.remove(), 3000);
+        }
+        
+        // Load statistics
+        function loadStatistics() {
+            // Breed distribution chart
+            const breedCtx = document.getElementById('breedChart').getContext('2d');
+            new Chart(breedCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Cattle', 'Buffalo', 'Cross'],
+                    datasets: [{
+                        data: [65, 25, 10],
+                        backgroundColor: ['#1a5f2a', '#ffc107', '#7b1fa2']
+                    }]
+                }
+            });
+            
+            // Confidence distribution chart
+            const confCtx = document.getElementById('confidenceChart').getContext('2d');
+            new Chart(confCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['<50%', '50-70%', '70-85%', '>85%'],
+                    datasets: [{
+                        label: 'Number of Cases',
+                        data: [5, 15, 30, 50],
+                        backgroundColor: '#1a5f2a'
+                    }]
+                }
+            });
+        }
+        
+        // Save settings
+        function saveSettings() {
+            showToast('Settings saved successfully!', 'success');
+        }
+        
+        // Logout
+        function logout() {
+            window.location.href = '/';
+        }
+    </script>
+</body>
+</html>
