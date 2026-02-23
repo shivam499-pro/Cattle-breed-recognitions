@@ -80,15 +80,59 @@ cattle-breed-recognition/
 
 ---
 
+## 📊 Training Results
+
+### Stage 1: YOLOv8-Nano (Cattle Detection)
+| Metric | Value |
+|--------|-------|
+| mAP50 | 99.5% |
+| Precision | 100% |
+| Recall | 100% |
+| Model Size | 5.9 MB (PT), 11.5 MB (ONNX) |
+| Training Images | 2,201 |
+| Status | ✅ Complete |
+
+### Stage 2: EfficientNet-B0 (Breed Classification)
+| Metric | Value |
+|--------|-------|
+| Test Accuracy | 57.71% |
+| Validation Accuracy | 64.72% |
+| Model Size | ~30 MB |
+| Training Images | 1,506 |
+| Validation Images | 428 |
+| Test Images | 227 |
+| Status | ✅ Complete |
+
+### 12 Breeds Trained
+| Breed | Precision | F1-Score |
+|-------|-----------|----------|
+| brahman | 75% | 67% |
+| brahman cross | 45% | 45% |
+| cholistani | 65% | 60% |
+| cholistani cross | 46% | 53% |
+| dhani | 100% | 71% |
+| fresian | 83% | 77% |
+| fresian cross | 44% | 51% |
+| kankarej | 100% | 77% |
+| sahiwal | 70% | 76% |
+| sahiwal cross | 52% | 49% |
+| sibbi | 60% | 62% |
+| unidentified (mixed) | 60% | 39% |
+
+---
+
 ## 📊 Indian Breeds Supported
 
-### Cattle Breeds (37+)
+### Currently Trained (12 Breeds)
+- brahman, brahman cross, cholistani, cholistani cross
+- dhani, fresian, fresian cross, kankarej
+- sahiwal, sahiwal cross, sibbi, unidentified (mixed)
+
+### Target Breeds (35+)
 - **Milch**: Gir, Sahiwal, Red Sindhi, Tharparkar, Rathi
 - **Draught**: Hallikar, Amritmahal, Khillari, Kangayam
 - **Dual-purpose**: Hariana, Kankrej, Ongole, Deoni
-
-### Buffalo Breeds (13+)
-- Murrah, Jaffrabadi, Nili-Ravi, Banni, Pandharpuri, Mehsana, Surti
+- **Buffalo**: Murrah, Jaffrabadi, Nili-Ravi, Banni, Pandharpuri
 
 ---
 
