@@ -14,6 +14,8 @@ from PIL import Image
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 
+
+
 # TensorFlow for EfficientNet
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'  # Suppress TF warnings
 import tensorflow as tf
@@ -254,8 +256,8 @@ def main():
     MODELS_DIR = os.path.join(BASE_DIR, "models")
     
     YOLO_PATH = os.path.join(MODELS_DIR, "cattle_detector.pt")
-    CLASSIFIER_PATH = os.path.join(MODELS_DIR, "breed_classifier.keras")
-    MAPPING_PATH = os.path.join(MODELS_DIR, "breed_mapping.json")
+    CLASSIFIER_PATH = os.path.join(MODELS_DIR, "breed_classifier_v2.keras")
+    MAPPING_PATH = os.path.join(MODELS_DIR, "breed_mapping_v2.json")
     
     # Check if all model files exist
     for path, name in [(YOLO_PATH, "YOLO model"), 

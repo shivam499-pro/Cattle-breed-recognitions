@@ -22,7 +22,8 @@ env/
 .vscode/
 *.swp
 
-# Model files (too large)
+# Model files (too large for GitHub)
+# Keep model files locally and in Google Drive
 *.pt
 *.pth
 *.onnx
@@ -30,12 +31,22 @@ env/
 *.h5
 *.keras
 
+# But keep breed mapping JSON files
+!*.json
+
 # Data files
 data/raw/
 data/augmented/
 data/processed/
+data/test/
 *.zip
 *.tar.gz
+
+# YOLO runs (training logs)
+runs/
+
+# Pipeline results (generated images)
+pipeline_results/
 
 # Logs
 *.log
