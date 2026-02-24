@@ -5,766 +5,324 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Expert Dashboard - Cattle Breed Recognition</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <style>
-        :root {
-            --primary-color: #1a5f2a;
-            --secondary-color: #f8f9fa;
-            --accent-color: #ffc107;
-            --danger-color: #dc3545;
-            --success-color: #28a745;
-        }
-        
         body {
+            background: #f5f5f5;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f5f5f5;
         }
-        
-        .navbar {
-            background-color: var(--primary-color);
-        }
-        
         .sidebar {
-            background-color: white;
-            min-height: calc(100vh - 56px);
-            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            background: linear-gradient(135deg, #1a5f2a 0%, #2d8a3e 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: white;
         }
-        
+        .sidebar h4 {
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            padding-bottom: 15px;
+        }
         .sidebar .nav-link {
-            color: #333;
-            padding: 12px 20px;
-            border-left: 3px solid transparent;
+            color: rgba(255,255,255,0.8);
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 5px;
         }
-        
-        .sidebar .nav-link:hover,
-        .sidebar .nav-link.active {
-            background-color: #e8f5e9;
-            border-left-color: var(--primary-color);
-            color: var(--primary-color);
+        .sidebar .nav-link:hover, .sidebar .nav-link.active {
+            background: rgba(255,255,255,0.1);
+            color: white;
         }
-        
+        .main-content {
+            padding: 30px;
+        }
         .stat-card {
             background: white;
-            border-radius: 10px;
-            padding: 20px;
+            border-radius: 15px;
+            padding: 25px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            transition: transform 0.2s;
+            margin-bottom: 20px;
         }
-        
-        .stat-card:hover {
-            transform: translateY(-5px);
+        .stat-card h3 {
+            font-size: 36px;
+            font-weight: 700;
+            color: #2d8a3e;
         }
-        
-        .stat-card .icon {
-            width: 50px;
-            height: 50px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-        }
-        
         .case-card {
             background: white;
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 15px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            border-left: 4px solid var(--accent-color);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            border-left: 5px solid #ffc107;
         }
-        
         .case-card.urgent {
-            border-left-color: var(--danger-color);
+            border-left-color: #dc3545;
         }
-        
-        .case-card.resolved {
-            border-left-color: var(--success-color);
+        .case-card.normal {
+            border-left-color: #ffc107;
         }
-        
-        .confidence-bar {
-            height: 8px;
-            border-radius: 4px;
-            background-color: #e9ecef;
-            overflow: hidden;
+        .case-card.reviewed {
+            border-left-color: #198754;
         }
-        
-        .confidence-bar .fill {
-            height: 100%;
-            border-radius: 4px;
-            transition: width 0.3s;
-        }
-        
-        .breed-badge {
-            display: inline-block;
-            padding: 5px 12px;
+        .breed-btn {
+            padding: 8px 15px;
             border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-            margin: 2px;
+            margin: 5px;
+            border: 2px solid #2d8a3e;
+            background: white;
+            color: #2d8a3e;
+            cursor: pointer;
+            transition: all 0.3s;
         }
-        
-        .breed-cattle {
-            background-color: #e3f2fd;
-            color: #1565c0;
+        .breed-btn:hover, .breed-btn.selected {
+            background: #2d8a3e;
+            color: white;
         }
-        
-        .breed-buffalo {
-            background-color: #fff3e0;
-            color: #e65100;
+        .prediction-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 15px;
+            margin: 3px;
+            font-size: 14px;
         }
-        
-        .breed-cross {
-            background-color: #f3e5f5;
-            color: #7b1fa2;
-        }
-        
-        .image-preview {
+        .confidence-high { background: #d4edda; color: #155724; }
+        .confidence-medium { background: #fff3cd; color: #856404; }
+        .confidence-low { background: #f8d7da; color: #721c24; }
+        .case-image {
             max-width: 100%;
-            max-height: 300px;
-            border-radius: 8px;
-            object-fit: contain;
-            background-color: #f5f5f5;
+            border-radius: 10px;
+            margin-bottom: 15px;
         }
-        
-        .modal-body {
-            max-height: 70vh;
-            overflow-y: auto;
+        .btn-confirm {
+            background: #198754;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 25px;
         }
-        
-        .prediction-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 8px 0;
-            border-bottom: 1px solid #eee;
+        .btn-confirm:hover {
+            background: #157347;
+            color: white;
         }
-        
-        .prediction-item:last-child {
-            border-bottom: none;
+        .btn-escalate {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 25px;
         }
-        
-        .status-badge {
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-size: 11px;
-            font-weight: 600;
+        .btn-escalate:hover {
+            background: #bb2d3b;
+            color: white;
         }
-        
-        .status-pending {
-            background-color: #fff3cd;
-            color: #856404;
+        .header {
+            background: white;
+            padding: 15px 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
         }
-        
-        .status-resolved {
-            background-color: #d4edda;
-            color: #155724;
+        .empty-state {
+            text-align: center;
+            padding: 60px;
+            color: #6c757d;
         }
-        
-        .status-escalated {
-            background-color: #f8d7da;
-            color: #721c24;
-        }
-        
-        .breed-select {
-            max-height: 200px;
-            overflow-y: auto;
-        }
-        
-        .loading-spinner {
-            display: none;
-            width: 50px;
-            height: 50px;
-            border: 5px solid #f3f3f3;
-            border-top: 5px solid var(--primary-color);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 20px auto;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        .toast-container {
-            position: fixed;
-            top: 70px;
-            right: 20px;
-            z-index: 1050;
+        .empty-state i {
+            font-size: 64px;
+            margin-bottom: 20px;
         }
     </style>
 </head>
 <body>
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">
-                <i class="bi bi-heart-pulse me-2"></i>
-                Cattle Breed Recognition - Expert Dashboard
-            </a>
-            <div class="d-flex align-items-center">
-                <span class="text-white me-3">
-                    <i class="bi bi-person-circle me-1"></i>
-                    <span id="expertName">Dr. Expert</span>
-                </span>
-                <button class="btn btn-outline-light btn-sm" onclick="logout()">
-                    <i class="bi bi-box-arrow-right"></i> Logout
-                </button>
-            </div>
-        </div>
-    </nav>
-
     <div class="container-fluid">
         <div class="row">
             <!-- Sidebar -->
-            <div class="col-md-2 sidebar p-0">
+            <div class="col-md-2 sidebar">
+                <h4><i class="bi bi-clipboard-data me-2"></i>Expert Panel</h4>
                 <nav class="nav flex-column">
-                    <a class="nav-link active" href="#" onclick="showSection('dashboard')">
-                        <i class="bi bi-speedometer2 me-2"></i> Dashboard
+                    <a class="nav-link active" href="/dashboard">
+                        <i class="bi bi-inbox me-2"></i>Pending Cases
                     </a>
-                    <a class="nav-link" href="#" onclick="showSection('pending')">
-                        <i class="bi bi-clock-history me-2"></i> Pending Reviews
-                        <span class="badge bg-warning text-dark ms-auto" id="pendingCount">0</span>
+                    <a class="nav-link" href="/">
+                        <i class="bi bi-upload me-2"></i>Upload Image
                     </a>
-                    <a class="nav-link" href="#" onclick="showSection('resolved')">
-                        <i class="bi bi-check-circle me-2"></i> Resolved Cases
+                    <a class="nav-link" href="/breeds">
+                        <i class="bi bi-list me-2"></i>All Breeds
                     </a>
-                    <a class="nav-link" href="#" onclick="showSection('statistics')">
-                        <i class="bi bi-bar-chart me-2"></i> Statistics
-                    </a>
-                    <a class="nav-link" href="#" onclick="showSection('settings')">
-                        <i class="bi bi-gear me-2"></i> Settings
+                    <a class="nav-link" href="/health">
+                        <i class="bi bi-heart-pulse me-2"></i>System Health
                     </a>
                 </nav>
             </div>
 
             <!-- Main Content -->
-            <div class="col-md-10 p-4">
-                <!-- Dashboard Section -->
-                <div id="dashboardSection">
-                    <h4 class="mb-4">Dashboard Overview</h4>
+            <div class="col-md-10">
+                <div class="header d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0">Expert Review Dashboard</h4>
+                    <span class="text-muted">Last updated: <span id="lastUpdate"></span></span>
+                </div>
+
+                <div class="main-content">
+                    <!-- Stats Row -->
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="stat-card">
+                                <h3 id="pendingCount">{{ cases|length }}</h3>
+                                <p class="text-muted mb-0">Pending Cases</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-card">
+                                <h3>41</h3>
+                                <p class="text-muted mb-0">Supported Breeds</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-card">
+                                <h3>72.6%</h3>
+                                <p class="text-muted mb-0">Model Accuracy</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-card">
+                                <h3>24h</h3>
+                                <p class="text-muted mb-0">Avg Response Time</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cases List -->
+                    <h5 class="mb-3">Cases Requiring Review</h5>
                     
-                    <!-- Stats Cards -->
-                    <div class="row mb-4">
-                        <div class="col-md-3">
-                            <div class="stat-card">
-                                <div class="d-flex justify-content-between">
-                                    <div>
-                                        <h6 class="text-muted">Pending Reviews</h6>
-                                        <h2 id="statPending">0</h2>
+                    {% if cases %}
+                        {% for case in cases %}
+                        <div class="case-card normal">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    {% if case.escalation_id %}
+                                    <img src="/static/escalations/images/{{ case.escalation_id }}.jpg" 
+                                         class="case-image" alt="Cattle Image"
+                                         onerror="this.src='https://via.placeholder.com/400x300?text=No+Image'">
+                                    {% else %}
+                                    <div class="case-image bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                                        <i class="bi bi-image" style="font-size: 48px; color: #ccc;"></i>
                                     </div>
-                                    <div class="icon bg-warning bg-opacity-25 text-warning">
-                                        <i class="bi bi-hourglass-split"></i>
-                                    </div>
+                                    {% endif %}
                                 </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="stat-card">
-                                <div class="d-flex justify-content-between">
-                                    <div>
-                                        <h6 class="text-muted">Resolved Today</h6>
-                                        <h2 id="statResolvedToday">0</h2>
+                                <div class="col-md-8">
+                                    <div class="d-flex justify-content-between align-items-start mb-3">
+                                        <div>
+                                            <h5 class="mb-1">Case #{{ case.escalation_id or loop.index }}</h5>
+                                            <p class="text-muted mb-0">
+                                                <i class="bi bi-clock me-1"></i>{{ case.created_at or 'Pending' }}
+                                            </p>
+                                        </div>
+                                        <span class="badge bg-warning text-dark">Pending Review</span>
                                     </div>
-                                    <div class="icon bg-success bg-opacity-25 text-success">
-                                        <i class="bi bi-check-circle"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="stat-card">
-                                <div class="d-flex justify-content-between">
-                                    <div>
-                                        <h6 class="text-muted">Total Resolved</h6>
-                                        <h2 id="statTotalResolved">0</h2>
-                                    </div>
-                                    <div class="icon bg-primary bg-opacity-25 text-primary">
-                                        <i class="bi bi-clipboard-check"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="stat-card">
-                                <div class="d-flex justify-content-between">
-                                    <div>
-                                        <h6 class="text-muted">Avg Response Time</h6>
-                                        <h2 id="statAvgTime">-</h2>
-                                    </div>
-                                    <div class="icon bg-info bg-opacity-25 text-info">
-                                        <i class="bi bi-clock"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
 
-                    <!-- Recent Cases -->
-                    <div class="card">
-                        <div class="card-header bg-white">
-                            <h5 class="mb-0">Recent Pending Cases</h5>
-                        </div>
-                        <div class="card-body" id="recentCasesList">
-                            <div class="loading-spinner" id="loadingSpinner"></div>
-                            <p class="text-muted text-center">Loading cases...</p>
-                        </div>
-                    </div>
-                </div>
+                                    <div class="mb-3">
+                                        <h6>AI Predictions:</h6>
+                                        {% if case.top_predictions %}
+                                            {% for pred in case.top_predictions %}
+                                            <span class="prediction-badge 
+                                                {% if pred.confidence >= 0.6 %}confidence-medium
+                                                {% else %}confidence-low{% endif %}">
+                                                {{ pred.breed }}: {{ (pred.confidence * 100)|round(1) }}%
+                                            </span>
+                                            {% endfor %}
+                                        {% else %}
+                                            <span class="text-muted">No predictions available</span>
+                                        {% endif %}
+                                    </div>
 
-                <!-- Pending Section -->
-                <div id="pendingSection" style="display: none;">
-                    <div class="d-flex justify-content-between align-items-center mb-4">
-                        <h4>Pending Reviews</h4>
-                        <div>
-                            <select class="form-select form-select-sm d-inline-block w-auto" id="sortFilter">
-                                <option value="date">Sort by Date</option>
-                                <option value="confidence">Sort by Confidence</option>
-                                <option value="animal">Sort by Animal ID</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div id="pendingCasesList"></div>
-                </div>
+                                    {% if case.flw_notes %}
+                                    <div class="mb-3">
+                                        <h6>FLW Notes:</h6>
+                                        <p class="text-muted">{{ case.flw_notes }}</p>
+                                    </div>
+                                    {% endif %}
 
-                <!-- Resolved Section -->
-                <div id="resolvedSection" style="display: none;">
-                    <h4 class="mb-4">Resolved Cases</h4>
-                    <div id="resolvedCasesList"></div>
-                </div>
+                                    <div class="mb-3">
+                                        <h6>Select Correct Breed:</h6>
+                                        <div id="breedButtons_{{ loop.index }}">
+                                            <!-- Breed buttons will be populated by JavaScript -->
+                                        </div>
+                                    </div>
 
-                <!-- Statistics Section -->
-                <div id="statisticsSection" style="display: none;">
-                    <h4 class="mb-4">Statistics & Analytics</h4>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="card">
-                                <div class="card-header">Breed Distribution</div>
-                                <div class="card-body">
-                                    <canvas id="breedChart"></canvas>
+                                    <div class="d-flex gap-2">
+                                        <button class="btn btn-confirm" onclick="confirmBreed('{{ case.escalation_id or loop.index }}')">
+                                            <i class="bi bi-check-circle me-1"></i>Confirm Breed
+                                        </button>
+                                        <button class="btn btn-escalate" onclick="escalateCase('{{ case.escalation_id or loop.index }}')">
+                                            <i class="bi bi-arrow-up-circle me-1"></i>Escalate Further
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="card">
-                                <div class="card-header">Confidence Distribution</div>
-                                <div class="card-body">
-                                    <canvas id="confidenceChart"></canvas>
-                                </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="stat-card">
+                            <div class="empty-state">
+                                <i class="bi bi-check-circle-fill" style="color: #198754;"></i>
+                                <h5>All Caught Up!</h5>
+                                <p>There are no pending cases for review.</p>
+                                <a href="/" class="btn btn-confirm mt-3">
+                                    <i class="bi bi-upload me-2"></i>Upload New Image
+                                </a>
                             </div>
                         </div>
-                    </div>
-                </div>
-
-                <!-- Settings Section -->
-                <div id="settingsSection" style="display: none;">
-                    <h4 class="mb-4">Settings</h4>
-                    <div class="card">
-                        <div class="card-body">
-                            <form>
-                                <div class="mb-3">
-                                    <label class="form-label">Expert Name</label>
-                                    <input type="text" class="form-control" id="settingsExpertName" value="Dr. Expert">
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Expert ID</label>
-                                    <input type="text" class="form-control" id="settingsExpertId" value="VET001">
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Notification Preferences</label>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="notifyEmail" checked>
-                                        <label class="form-check-label" for="notifyEmail">Email notifications</label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="notifySms">
-                                        <label class="form-check-label" for="notifySms">SMS notifications</label>
-                                    </div>
-                                </div>
-                                <button type="button" class="btn btn-primary" onclick="saveSettings()">Save Settings</button>
-                            </form>
-                        </div>
-                    </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Review Modal -->
-    <div class="modal fade" id="reviewModal" tabindex="-1">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Review Case</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h6>Animal Image</h6>
-                            <img id="modalImage" class="image-preview mb-3" src="" alt="Animal Image">
-                            
-                            <h6>Case Details</h6>
-                            <table class="table table-sm">
-                                <tr>
-                                    <td>Escalation ID:</td>
-                                    <td id="modalEscalationId">-</td>
-                                </tr>
-                                <tr>
-                                    <td>Animal ID:</td>
-                                    <td id="modalAnimalId">-</td>
-                                </tr>
-                                <tr>
-                                    <td>Created:</td>
-                                    <td id="modalCreated">-</td>
-                                </tr>
-                                <tr>
-                                    <td>FLW Notes:</td>
-                                    <td id="modalFlwNotes">-</td>
-                                </tr>
-                            </table>
-                        </div>
-                        <div class="col-md-6">
-                            <h6>AI Predictions</h6>
-                            <div id="modalPredictions"></div>
-                            
-                            <hr>
-                            
-                            <h6>Your Decision</h6>
-                            <div class="mb-3">
-                                <label class="form-label">Select Breed</label>
-                                <select class="form-select breed-select" id="modalBreedSelect">
-                                    <option value="">-- Select Breed --</option>
-                                </select>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Notes</label>
-                                <textarea class="form-control" id="modalExpertNotes" rows="3" 
-                                    placeholder="Add your observations..."></textarea>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-success" onclick="resolveCase()">
-                        <i class="bi bi-check-circle me-1"></i> Confirm & Resolve
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Toast Container -->
-    <div class="toast-container" id="toastContainer"></div>
-
-    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        // API Base URL
-        const API_BASE = window.location.origin;
-        
-        // Breeds list
-        const BREEDS = [
-            'Gir', 'Sahiwal', 'Red_Sindhi', 'Tharparkar', 'Rathi',
-            'Hariana', 'Kankrej', 'Ongole', 'Deoni',
-            'Hallikar', 'Amritmahal', 'Khillari', 'Kangayam', 'Bargur',
-            'Dangi', 'Krishna_Valley', 'Malnad_Gidda', 'Punganur', 'Vechur',
-            'Pulikulam', 'Umblachery', 'Toda', 'Kalahandi',
-            'Murrah', 'Jaffrabadi', 'Nili_Ravi', 'Banni', 'Pandharpuri',
-            'Mehsana', 'Surti', 'Nagpuri', 'Bhadawari', 'Chilika',
-            'Jersey_Cross', 'HF_Cross'
+        // Update timestamp
+        document.getElementById('lastUpdate').textContent = new Date().toLocaleString();
+
+        // All 41 breeds
+        const breeds = [
+            'Alambadi', 'Amritmahal', 'Ayrshire', 'Banni', 'Bargur', 'Bhadawari',
+            'Brown_Swiss', 'Dangi', 'Deoni', 'Gir', 'Guernsey', 'Hallikar',
+            'Hariana', 'Holstein_Friesian', 'Jaffrabadi', 'Jersey', 'Kangayam',
+            'Kankrej', 'Kasargod', 'Kenkatha', 'Kherigarh', 'Khillari',
+            'Krishna_Valley', 'Malnad_gidda', 'Mehsana', 'Murrah', 'Nagori',
+            'Nagpuri', 'Nili_Ravi', 'Nimari', 'Ongole', 'Pulikulam', 'Rathi',
+            'Red_Dane', 'Red_Sindhi', 'Sahiwal', 'Surti', 'Tharparkar', 'Toda',
+            'Umblachery', 'Vechur'
         ];
-        
-        // Current case being reviewed
-        let currentCase = null;
-        
-        // Initialize
-        document.addEventListener('DOMContentLoaded', function() {
-            loadDashboard();
-            populateBreedSelect();
+
+        // Populate breed buttons for each case
+        document.querySelectorAll('[id^="breedButtons_"]').forEach((container, index) => {
+            breeds.forEach(breed => {
+                const btn = document.createElement('button');
+                btn.className = 'breed-btn';
+                btn.textContent = breed;
+                btn.onclick = function() {
+                    container.querySelectorAll('.breed-btn').forEach(b => b.classList.remove('selected'));
+                    this.classList.add('selected');
+                };
+                container.appendChild(btn);
+            });
         });
-        
-        // Show section
-        function showSection(section) {
-            // Hide all sections
-            document.querySelectorAll('[id$="Section"]').forEach(el => {
-                el.style.display = 'none';
-            });
-            
-            // Show selected section
-            document.getElementById(section + 'Section').style.display = 'block';
-            
-            // Update nav
-            document.querySelectorAll('.sidebar .nav-link').forEach(el => {
-                el.classList.remove('active');
-            });
-            event.target.classList.add('active');
-            
-            // Load section data
-            if (section === 'pending') loadPendingCases();
-            if (section === 'resolved') loadResolvedCases();
-            if (section === 'statistics') loadStatistics();
-        }
-        
-        // Load dashboard
-        async function loadDashboard() {
-            try {
-                const response = await fetch(`${API_BASE}/expert/pending`);
-                const data = await response.json();
-                
-                // Update stats
-                document.getElementById('statPending').textContent = data.total;
-                document.getElementById('pendingCount').textContent = data.total;
-                
-                // Display recent cases
-                displayCases(data.cases.slice(0, 5), 'recentCasesList');
-                
-            } catch (error) {
-                console.error('Error loading dashboard:', error);
-                showToast('Error loading dashboard', 'danger');
-            }
-        }
-        
-        // Load pending cases
-        async function loadPendingCases() {
-            try {
-                const response = await fetch(`${API_BASE}/expert/pending`);
-                const data = await response.json();
-                displayCases(data.cases, 'pendingCasesList');
-            } catch (error) {
-                console.error('Error loading pending cases:', error);
-            }
-        }
-        
-        // Load resolved cases
-        async function loadResolvedCases() {
-            // In production, fetch from API
-            document.getElementById('resolvedCasesList').innerHTML = `
-                <div class="alert alert-info">
-                    <i class="bi bi-info-circle me-2"></i>
-                    Resolved cases will appear here.
-                </div>
-            `;
-        }
-        
-        // Display cases
-        function displayCases(cases, containerId) {
-            const container = document.getElementById(containerId);
-            
-            if (cases.length === 0) {
-                container.innerHTML = `
-                    <div class="text-center text-muted py-4">
-                        <i class="bi bi-check-circle display-4"></i>
-                        <p class="mt-2">No pending cases!</p>
-                    </div>
-                `;
+
+        function confirmBreed(caseId) {
+            const selectedBreed = document.querySelector(`#breedButtons_${caseId} .breed-btn.selected`);
+            if (!selectedBreed) {
+                alert('Please select a breed first');
                 return;
             }
             
-            let html = '';
-            cases.forEach(case => {
-                const predictions = case.top_predictions || [];
-                const topPrediction = predictions[0] || { breed: 'Unknown', confidence: 0 };
-                
-                html += `
-                    <div class="case-card">
-                        <div class="row align-items-center">
-                            <div class="col-md-3">
-                                <span class="status-badge status-pending">
-                                    <i class="bi bi-clock me-1"></i> Pending
-                                </span>
-                                <p class="mt-2 mb-0 small text-muted">
-                                    <i class="bi bi-calendar me-1"></i>
-                                    ${new Date(case.created_at).toLocaleString()}
-                                </p>
-                            </div>
-                            <div class="col-md-4">
-                                <h6 class="mb-1">AI Prediction</h6>
-                                <span class="breed-badge ${getBreedClass(topPrediction.breed)}">
-                                    ${topPrediction.breed}
-                                </span>
-                                <div class="confidence-bar mt-2" style="width: 150px;">
-                                    <div class="fill bg-warning" style="width: ${topPrediction.confidence * 100}%"></div>
-                                </div>
-                                <small class="text-muted">${(topPrediction.confidence * 100).toFixed(1)}% confidence</small>
-                            </div>
-                            <div class="col-md-3">
-                                <small class="text-muted">Animal ID:</small>
-                                <p class="mb-0">${case.animal_id || 'N/A'}</p>
-                            </div>
-                            <div class="col-md-2 text-end">
-                                <button class="btn btn-primary btn-sm" onclick="openReview('${case.escalation_id}')">
-                                    <i class="bi bi-eye me-1"></i> Review
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            });
-            
-            container.innerHTML = html;
+            // In production, this would send to backend
+            alert(`Case ${caseId} confirmed as: ${selectedBreed.textContent}\n\nThis would be recorded for model improvement.`);
+            location.reload();
         }
-        
-        // Open review modal
-        async function openReview(escalationId) {
-            try {
-                // Fetch case details
-                const response = await fetch(`${API_BASE}/expert/pending`);
-                const data = await response.json();
-                currentCase = data.cases.find(c => c.escalation_id === escalationId);
-                
-                if (!currentCase) {
-                    showToast('Case not found', 'danger');
-                    return;
-                }
-                
-                // Populate modal
-                document.getElementById('modalEscalationId').textContent = currentCase.escalation_id;
-                document.getElementById('modalAnimalId').textContent = currentCase.animal_id || 'N/A';
-                document.getElementById('modalCreated').textContent = new Date(currentCase.created_at).toLocaleString();
-                document.getElementById('modalFlwNotes').textContent = currentCase.flw_notes || 'No notes provided';
-                
-                // Display predictions
-                const predictionsHtml = (currentCase.top_predictions || []).map((pred, idx) => `
-                    <div class="prediction-item">
-                        <span>
-                            <span class="breed-badge ${getBreedClass(pred.breed)}">${pred.breed}</span>
-                            ${idx === 0 ? '<span class="badge bg-primary ms-1">Top</span>' : ''}
-                        </span>
-                        <span class="text-muted">${(pred.confidence * 100).toFixed(1)}%</span>
-                    </div>
-                `).join('');
-                document.getElementById('modalPredictions').innerHTML = predictionsHtml;
-                
-                // Set default breed selection
-                if (currentCase.top_predictions && currentCase.top_predictions.length > 0) {
-                    document.getElementById('modalBreedSelect').value = currentCase.top_predictions[0].breed;
-                }
-                
-                // Show modal
-                new bootstrap.Modal(document.getElementById('reviewModal')).show();
-                
-            } catch (error) {
-                console.error('Error opening review:', error);
-                showToast('Error loading case details', 'danger');
+
+        function escalateCase(caseId) {
+            if (confirm('Escalate this case to senior expert?')) {
+                alert(`Case ${caseId} escalated to senior expert.`);
             }
-        }
-        
-        // Resolve case
-        async function resolveCase() {
-            const breed = document.getElementById('modalBreedSelect').value;
-            const notes = document.getElementById('modalExpertNotes').value;
-            
-            if (!breed) {
-                showToast('Please select a breed', 'warning');
-                return;
-            }
-            
-            try {
-                const response = await fetch(`${API_BASE}/expert/resolve`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        escalation_id: currentCase.escalation_id,
-                        resolved_breed: breed,
-                        expert_notes: notes,
-                        expert_id: 'VET001'
-                    })
-                });
-                
-                const data = await response.json();
-                
-                if (data.status === 'success') {
-                    showToast('Case resolved successfully!', 'success');
-                    bootstrap.Modal.getInstance(document.getElementById('reviewModal')).hide();
-                    loadDashboard();
-                } else {
-                    showToast('Error resolving case', 'danger');
-                }
-                
-            } catch (error) {
-                console.error('Error resolving case:', error);
-                showToast('Error resolving case', 'danger');
-            }
-        }
-        
-        // Populate breed select
-        function populateBreedSelect() {
-            const select = document.getElementById('modalBreedSelect');
-            BREEDS.forEach(breed => {
-                const option = document.createElement('option');
-                option.value = breed;
-                option.textContent = breed.replace('_', ' ');
-                select.appendChild(option);
-            });
-        }
-        
-        // Get breed class for styling
-        function getBreedClass(breed) {
-            const cattleBreeds = ['Gir', 'Sahiwal', 'Red_Sindhi', 'Tharparkar', 'Rathi', 'Hariana', 'Kankrej', 'Ongole', 'Deoni', 'Hallikar', 'Amritmahal', 'Khillari', 'Kangayam', 'Bargur', 'Dangi', 'Krishna_Valley', 'Malnad_Gidda', 'Punganur', 'Vechur', 'Pulikulam', 'Umblachery', 'Toda', 'Kalahandi'];
-            const buffaloBreeds = ['Murrah', 'Jaffrabadi', 'Nili_Ravi', 'Banni', 'Pandharpuri', 'Mehsana', 'Surti', 'Nagpuri', 'Bhadawari', 'Chilika'];
-            
-            if (cattleBreeds.includes(breed)) return 'breed-cattle';
-            if (buffaloBreeds.includes(breed)) return 'breed-buffalo';
-            return 'breed-cross';
-        }
-        
-        // Show toast notification
-        function showToast(message, type = 'info') {
-            const toast = document.createElement('div');
-            toast.className = `toast show align-items-center text-white bg-${type} border-0`;
-            toast.innerHTML = `
-                <div class="d-flex">
-                    <div class="toast-body">${message}</div>
-                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
-                </div>
-            `;
-            document.getElementById('toastContainer').appendChild(toast);
-            
-            setTimeout(() => toast.remove(), 3000);
-        }
-        
-        // Load statistics
-        function loadStatistics() {
-            // Breed distribution chart
-            const breedCtx = document.getElementById('breedChart').getContext('2d');
-            new Chart(breedCtx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Cattle', 'Buffalo', 'Cross'],
-                    datasets: [{
-                        data: [65, 25, 10],
-                        backgroundColor: ['#1a5f2a', '#ffc107', '#7b1fa2']
-                    }]
-                }
-            });
-            
-            // Confidence distribution chart
-            const confCtx = document.getElementById('confidenceChart').getContext('2d');
-            new Chart(confCtx, {
-                type: 'bar',
-                data: {
-                    labels: ['<50%', '50-70%', '70-85%', '>85%'],
-                    datasets: [{
-                        label: 'Number of Cases',
-                        data: [5, 15, 30, 50],
-                        backgroundColor: '#1a5f2a'
-                    }]
-                }
-            });
-        }
-        
-        // Save settings
-        function saveSettings() {
-            showToast('Settings saved successfully!', 'success');
-        }
-        
-        // Logout
-        function logout() {
-            window.location.href = '/';
         }
     </script>
 </body>

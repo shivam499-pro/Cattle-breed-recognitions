@@ -5,6 +5,10 @@ BPA Integration API - Cattle Breed Recognition Module
 This Flask API provides endpoints for integrating the AI breed recognition
 module with the existing Bharat Pashudhan App (BPA).
 
+Two-Stage Pipeline:
+  Stage 1: YOLOv8-Nano - Detect cattle in image
+  Stage 2: EfficientNet-B0 - Classify breed (41 breeds)
+
 Author: SIH 2025 Team
 Problem Statement: SIH25004
 """
@@ -12,12 +16,18 @@ Problem Statement: SIH25004
 from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
 import os
+import sys
 import json
 import base64
 import numpy as np
 from datetime import datetime
 from pathlib import Path
 import logging
+from PIL import Image
+import io
+
+# Add parent directory to path for imports
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -29,27 +39,12 @@ CORS(app)  # Enable CORS for BPA integration
 
 # Configuration
 CONFIG = {
-    'MODEL_PATH': os.environ.get('MODEL_PATH', '../models/final'),
+    'MODELS_DIR': os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'models'),
     'CONFIDENCE_THRESHOLD': 0.85,  # Auto-confirm threshold
-    'ESCALATION_THRESHOLD': 0.60,  # Expert escalation threshold
+    'ESCALATION_THRESHOLD': 0.60,  # FLW select threshold
     'MAX_IMAGE_SIZE': 10 * 1024 * 1024,  # 10MB max
     'SUPPORTED_FORMATS': ['jpg', 'jpeg', 'png', 'webp']
 }
-
-# Load breed classes
-BREEDS = [
-    'Gir', 'Sahiwal', 'Red_Sindhi', 'Tharparkar', 'Rathi',
-    'Hariana', 'Kankrej', 'Ongole', 'Deoni',
-    'Hallikar', 'Amritmahal', 'Khillari', 'Kangayam', 'Bargur',
-    'Dangi', 'Krishna_Valley', 'Malnad_Gidda', 'Punganur', 'Vechur',
-    'Pulikulam', 'Umblachery', 'Toda', 'Kalahandi',
-    'Murrah', 'Jaffrabadi', 'Nili_Ravi', 'Banni', 'Pandharpuri',
-    'Mehsana', 'Surti', 'Nagpuri', 'Bhadawari', 'Chilika',
-    'Jersey_Cross', 'HF_Cross'
-]
-
-IDX_TO_CLASS = {i: breed for i, breed in enumerate(BREEDS)}
-CLASS_TO_IDX = {breed: i for i, breed in enumerate(BREEDS)}
 
 
 class BreedRecognitionEngine:
@@ -58,146 +53,160 @@ class BreedRecognitionEngine:
     Uses YOLOv8-Nano for detection and EfficientNet-B0 for classification.
     """
     
-    def __init__(self, model_path):
-        """Initialize the AI engine with TFLite models."""
-        self.model_path = model_path
-        self.detector = None
+    def __init__(self, models_dir):
+        """Initialize the AI engine with trained models."""
+        self.models_dir = models_dir
+        self.yolo_model = None
         self.classifier = None
+        self.breed_mapping = {}
+        self.idx_to_breed = {}
         self.load_models()
     
     def load_models(self):
-        """Load TFLite models for detection and classification."""
-        import tensorflow as tf
+        """Load trained models for detection and classification."""
+        # Suppress TF warnings
+        os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
         
         # Load YOLOv8-Nano detector
-        detector_path = os.path.join(self.model_path, 'yolov8_nano_cattle_detector_int8.tflite')
-        if os.path.exists(detector_path):
-            self.detector = tf.lite.Interpreter(model_path=detector_path)
-            self.detector.allocate_tensors()
-            logger.info(f"Loaded detector: {detector_path}")
+        yolo_path = os.path.join(self.models_dir, 'cattle_detector.pt')
+        if os.path.exists(yolo_path):
+            from ultralytics import YOLO
+            self.yolo_model = YOLO(yolo_path)
+            logger.info(f"✅ Loaded YOLOv8-Nano detector: {yolo_path}")
         else:
-            logger.warning(f"Detector not found: {detector_path}")
+            logger.warning(f"❌ YOLO model not found: {yolo_path}")
         
         # Load EfficientNet-B0 classifier
-        classifier_path = os.path.join(self.model_path, 'efficientnet_b0_int8.tflite')
+        classifier_path = os.path.join(self.models_dir, 'breed_classifier_v2.keras')
         if os.path.exists(classifier_path):
-            self.classifier = tf.lite.Interpreter(model_path=classifier_path)
-            self.classifier.allocate_tensors()
-            logger.info(f"Loaded classifier: {classifier_path}")
+            from tensorflow.keras.models import load_model
+            self.classifier = load_model(classifier_path)
+            logger.info(f"✅ Loaded EfficientNet-B0 classifier: {classifier_path}")
         else:
-            logger.warning(f"Classifier not found: {classifier_path}")
+            logger.warning(f"❌ Classifier not found: {classifier_path}")
+        
+        # Load breed mapping
+        mapping_path = os.path.join(self.models_dir, 'breed_mapping_v2.json')
+        if os.path.exists(mapping_path):
+            with open(mapping_path, 'r') as f:
+                self.breed_mapping = json.load(f)
+            self.idx_to_breed = {int(k): v for k, v in self.breed_mapping.items()}
+            logger.info(f"✅ Loaded breed mapping: {len(self.idx_to_breed)} breeds")
+        else:
+            logger.warning(f"❌ Breed mapping not found: {mapping_path}")
     
-    def preprocess_image(self, image_array, target_size=(224, 224)):
-        """Preprocess image for model inference."""
-        import cv2
-        
-        # Resize
-        image = cv2.resize(image_array, target_size)
-        
-        # Normalize
-        image = image.astype(np.float32) / 255.0
-        
-        # Add batch dimension
-        image = np.expand_dims(image, axis=0)
-        
-        return image
-    
-    def detect_animal(self, image_array):
+    def detect_cattle(self, image_array, conf_threshold=0.5):
         """
-        Detect animal in image using YOLOv8-Nano.
+        Detect cattle in image using YOLOv8-Nano.
         
+        Args:
+            image_array: numpy array (BGR format from cv2)
+            conf_threshold: Minimum confidence for detection
+            
         Returns:
-            dict: Detection results with bounding box and confidence
+            List of detections with bbox and crop
         """
-        if self.detector is None:
+        if self.yolo_model is None:
             # Return full image as fallback
             h, w = image_array.shape[:2]
-            return {
+            return [{
                 'detected': True,
-                'bbox': [0, 0, w, h],  # x, y, width, height
+                'bbox': [0, 0, w, h],
                 'confidence': 1.0,
                 'crop': image_array
-            }
+            }]
         
-        # Get input/output details
-        input_details = self.detector.get_input_details()
-        output_details = self.detector.get_output_details()
+        # Convert BGR to RGB for YOLO
+        image_rgb = image_array[:, :, ::-1]
         
-        # Preprocess for detection (416x416)
-        input_size = input_details[0]['shape'][1]  # Usually 416
-        processed = self.preprocess_image(image_array, (input_size, input_size))
+        # Run YOLO detection
+        results = self.yolo_model.predict(image_rgb, conf=conf_threshold, verbose=False)
         
-        # Run inference
-        self.detector.set_tensor(input_details[0]['index'], processed)
-        self.detector.invoke()
-        output = self.detector.get_tensor(output_details[0]['index'])
+        detections = []
+        for result in results:
+            boxes = result.boxes
+            for box in boxes:
+                x1, y1, x2, y2 = box.xyxy[0].cpu().numpy()
+                conf = box.conf[0].cpu().numpy()
+                
+                # Crop detected region
+                x1, y1, x2, y2 = int(x1), int(y1), int(x2), int(y2)
+                crop = image_array[y1:y2, x1:x2]
+                
+                detections.append({
+                    'detected': True,
+                    'bbox': [x1, y1, x2-x1, y2-y1],  # x, y, width, height
+                    'confidence': float(conf),
+                    'crop': crop
+                })
         
-        # Parse YOLO output (simplified)
-        # In production, use proper NMS and box decoding
-        h, w = image_array.shape[:2]
-        
-        return {
-            'detected': True,
-            'bbox': [0, 0, w, h],
-            'confidence': 0.95,
-            'crop': image_array
-        }
+        return detections if detections else [{
+            'detected': False,
+            'bbox': None,
+            'confidence': 0.0,
+            'crop': None
+        }]
     
-    def classify_breed(self, image_array):
+    def classify_breed(self, image_crop):
         """
         Classify breed using EfficientNet-B0.
         
+        Args:
+            image_crop: numpy array (BGR format)
+            
         Returns:
             dict: Classification results with breed, confidence, and top predictions
         """
-        if self.classifier is None:
-            # Return mock result
+        if self.classifier is None or image_crop is None:
             return {
                 'breed': 'Unknown',
                 'confidence': 0.0,
                 'top_predictions': []
             }
         
-        # Get input/output details
-        input_details = self.classifier.get_input_details()
-        output_details = self.classifier.get_output_details()
+        try:
+            from tensorflow.keras.applications.efficientnet import preprocess_input
+            
+            # Convert BGR to RGB
+            image_rgb = image_crop[:, :, ::-1]
+            
+            # Resize to 224x224
+            pil_image = Image.fromarray(image_rgb)
+            pil_image = pil_image.resize((224, 224))
+            
+            # Convert to array and preprocess
+            img_array = np.array(pil_image)
+            if img_array.shape[-1] == 4:  # RGBA to RGB
+                img_array = img_array[:, :, :3]
+            img_array = preprocess_input(img_array)
+            img_batch = np.expand_dims(img_array, axis=0)
+            
+            # Predict
+            predictions = self.classifier.predict(img_batch, verbose=0)[0]
+            
+            # Get top 3 predictions
+            top_3_indices = np.argsort(predictions)[-3:][::-1]
+            top_predictions = []
+            for idx in top_3_indices:
+                top_predictions.append({
+                    'breed': self.idx_to_breed.get(idx, f'Unknown_{idx}'),
+                    'confidence': float(predictions[idx])
+                })
+            
+            return {
+                'breed': self.idx_to_breed.get(top_3_indices[0], 'Unknown'),
+                'confidence': float(predictions[top_3_indices[0]]),
+                'top_predictions': top_predictions
+            }
         
-        # Preprocess for classification (224x224)
-        processed = self.preprocess_image(image_array, (224, 224))
-        
-        # Handle quantized input
-        if input_details[0]['dtype'] == np.uint8:
-            input_scale = input_details[0]['quantization_parameters']['scales'][0]
-            input_zero_point = input_details[0]['quantization_parameters']['zero_points'][0]
-            processed = (processed / input_scale + input_zero_point).astype(np.uint8)
-        
-        # Run inference
-        self.classifier.set_tensor(input_details[0]['index'], processed.astype(input_details[0]['dtype']))
-        self.classifier.invoke()
-        output = self.classifier.get_tensor(output_details[0]['index'])
-        
-        # Handle quantized output
-        if output_details[0]['dtype'] == np.uint8:
-            output_scale = output_details[0]['quantization_parameters']['scales'][0]
-            output_zero_point = output_details[0]['quantization_parameters']['zero_points'][0]
-            output = (output.astype(np.float32) - output_zero_point) * output_scale
-        
-        # Get predictions
-        probabilities = output[0]
-        top_3_idx = np.argsort(probabilities)[-3:][::-1]
-        
-        top_predictions = []
-        for idx in top_3_idx:
-            top_predictions.append({
-                'breed': IDX_TO_CLASS[idx],
-                'confidence': float(probabilities[idx])
-            })
-        
-        return {
-            'breed': IDX_TO_CLASS[top_3_idx[0]],
-            'confidence': float(probabilities[top_3_idx[0]]),
-            'top_predictions': top_predictions
-        }
+        except Exception as e:
+            logger.error(f"Classification error: {str(e)}")
+            return {
+                'breed': 'Error',
+                'confidence': 0.0,
+                'top_predictions': [],
+                'error': str(e)
+            }
     
     def predict(self, image_array):
         """
@@ -210,44 +219,48 @@ class BreedRecognitionEngine:
             dict: Complete prediction results
         """
         import time
-        
         start_time = time.time()
         
         # Stage 1: Detection
-        detection = self.detect_animal(image_array)
+        detections = self.detect_cattle(image_array)
         
-        # Stage 2: Classification
-        if detection['detected']:
-            classification = self.classify_breed(detection['crop'])
-        else:
-            classification = {
-                'breed': 'Unknown',
-                'confidence': 0.0,
-                'top_predictions': []
-            }
+        results = []
+        for detection in detections:
+            if detection['detected'] and detection['crop'] is not None:
+                # Stage 2: Classification
+                classification = self.classify_breed(detection['crop'])
+                
+                # Determine action based on confidence
+                confidence = classification['confidence']
+                if confidence >= CONFIG['CONFIDENCE_THRESHOLD']:
+                    action = 'auto_confirm'
+                elif confidence >= CONFIG['ESCALATION_THRESHOLD']:
+                    action = 'flw_select'
+                else:
+                    action = 'expert_review'
+                
+                results.append({
+                    'detection': {
+                        'bbox': detection['bbox'],
+                        'confidence': detection['confidence']
+                    },
+                    'classification': classification,
+                    'action': action
+                })
         
         inference_time = (time.time() - start_time) * 1000
         
-        # Determine action based on confidence
-        confidence = classification['confidence']
-        if confidence >= CONFIG['CONFIDENCE_THRESHOLD']:
-            action = 'auto_confirm'
-        elif confidence >= CONFIG['ESCALATION_THRESHOLD']:
-            action = 'flw_select'
-        else:
-            action = 'expert_review'
-        
         return {
-            'detection': detection,
-            'classification': classification,
-            'action': action,
-            'inference_time_ms': inference_time,
+            'success': len(results) > 0,
+            'num_cattle': len(results),
+            'results': results,
+            'inference_time_ms': round(inference_time, 2),
             'timestamp': datetime.now().isoformat()
         }
 
 
 # Initialize AI engine
-ai_engine = BreedRecognitionEngine(CONFIG['MODEL_PATH'])
+ai_engine = BreedRecognitionEngine(CONFIG['MODELS_DIR'])
 
 
 # ==================== API Routes ====================
@@ -255,16 +268,27 @@ ai_engine = BreedRecognitionEngine(CONFIG['MODEL_PATH'])
 @app.route('/', methods=['GET'])
 def index():
     """API documentation page."""
+    return render_template('index.html')
+
+
+@app.route('/api', methods=['GET'])
+def api_info():
+    """API information."""
     return jsonify({
         'name': 'Cattle Breed Recognition API',
-        'version': '1.0.0',
+        'version': '2.0.0',
         'description': 'AI-powered breed recognition for Bharat Pashudhan App',
+        'models': {
+            'detection': 'YOLOv8-Nano (99.5% mAP)',
+            'classification': 'EfficientNet-B0 (72.61% accuracy, 41 breeds)'
+        },
         'endpoints': {
-            'POST /predict': 'Predict breed from image',
+            'POST /predict': 'Predict breed from uploaded image',
             'POST /predict/base64': 'Predict breed from base64 image',
             'GET /breeds': 'List all supported breeds',
             'GET /health': 'Health check',
-            'POST /feedback': 'Submit feedback for model improvement'
+            'POST /feedback': 'Submit feedback for model improvement',
+            'POST /escalate': 'Escalate to expert review'
         }
     })
 
@@ -275,9 +299,10 @@ def health_check():
     return jsonify({
         'status': 'healthy',
         'models_loaded': {
-            'detector': ai_engine.detector is not None,
+            'detector': ai_engine.yolo_model is not None,
             'classifier': ai_engine.classifier is not None
         },
+        'breeds_count': len(ai_engine.idx_to_breed),
         'timestamp': datetime.now().isoformat()
     })
 
@@ -285,12 +310,26 @@ def health_check():
 @app.route('/breeds', methods=['GET'])
 def list_breeds():
     """List all supported breeds."""
+    breeds = sorted(ai_engine.idx_to_breed.values())
+    
+    # Categorize breeds
+    cattle_breeds = ['Alambadi', 'Amritmahal', 'Bargur', 'Dangi', 'Deoni', 'Gir', 
+                     'Hallikar', 'Hariana', 'Kangayam', 'Kankrej', 'Kasargod',
+                     'Kenkatha', 'Kherigarh', 'Khillari', 'Krishna_Valley',
+                     'Malnad_gidda', 'Nagori', 'Nagpuri', 'Nimari', 'Ongole',
+                     'Pulikulam', 'Rathi', 'Red_Sindhi', 'Sahiwal', 'Tharparkar',
+                     'Toda', 'Umblachery', 'Vechur']
+    buffalo_breeds = ['Banni', 'Bhadawari', 'Jaffrabadi', 'Mehsana', 'Murrah',
+                      'Nili_Ravi', 'Surti']
+    foreign_breeds = ['Ayrshire', 'Brown_Swiss', 'Guernsey', 'Holstein_Friesian',
+                      'Jersey', 'Red_Dane']
+    
     return jsonify({
-        'total': len(BREEDS),
-        'cattle': BREEDS[:23],
-        'buffalo': BREEDS[23:33],
-        'cross': BREEDS[33:],
-        'all': BREEDS
+        'total': len(breeds),
+        'cattle_indian': [b for b in breeds if b in cattle_breeds],
+        'buffalo_indian': [b for b in breeds if b in buffalo_breeds],
+        'foreign': [b for b in breeds if b in foreign_breeds],
+        'all': breeds
     })
 
 
@@ -306,7 +345,7 @@ def predict():
     """
     # Check for image file
     if 'image' not in request.files:
-        return jsonify({'error': 'No image provided'}), 400
+        return jsonify({'error': 'No image provided. Use multipart/form-data with "image" field.'}), 400
     
     file = request.files['image']
     
@@ -359,7 +398,7 @@ def predict_base64():
     data = request.get_json()
     
     if not data or 'image' not in data:
-        return jsonify({'error': 'No image data provided'}), 400
+        return jsonify({'error': 'No image data provided. Send JSON with "image" field.'}), 400
     
     try:
         # Decode base64
@@ -400,8 +439,7 @@ def submit_feedback():
         "actual_breed": "Sahiwal",
         "confidence": 0.75,
         "flw_id": "FLW001",
-        "expert_verified": false,
-        "image_base64": "optional_base64_image"
+        "expert_verified": false
     }
     """
     data = request.get_json()
@@ -425,8 +463,8 @@ def submit_feedback():
         'timestamp': datetime.now().isoformat()
     }
     
-    # Save to feedback file (in production, use database)
-    feedback_dir = Path('../data/feedback')
+    # Save to feedback file
+    feedback_dir = Path(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data', 'feedback'))
     feedback_dir.mkdir(parents=True, exist_ok=True)
     
     feedback_file = feedback_dir / f"feedback_{datetime.now().strftime('%Y%m%d')}.jsonl"
@@ -475,8 +513,8 @@ def escalate_to_expert():
         'created_at': datetime.now().isoformat()
     }
     
-    # Save escalation (in production, use database and notification system)
-    escalation_dir = Path('../data/escalations')
+    # Save escalation
+    escalation_dir = Path(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data', 'escalations'))
     escalation_dir.mkdir(parents=True, exist_ok=True)
     
     escalation_file = escalation_dir / f"{escalation['escalation_id']}.json"
@@ -499,100 +537,35 @@ def escalate_to_expert():
     })
 
 
-# ==================== Expert Dashboard Routes ====================
-
-@app.route('/expert/pending', methods=['GET'])
-def get_pending_cases():
-    """Get list of pending expert review cases."""
-    escalation_dir = Path('../data/escalations')
-    pending_cases = []
+@app.route('/dashboard', methods=['GET'])
+def dashboard():
+    """Expert dashboard for reviewing escalated cases."""
+    escalation_dir = Path(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data', 'escalations'))
     
+    pending_cases = []
     if escalation_dir.exists():
-        for case_file in escalation_dir.glob('ESC_*.json'):
-            with open(case_file, 'r') as f:
+        for file in escalation_dir.glob('ESC_*.json'):
+            with open(file, 'r') as f:
                 case = json.load(f)
                 if case.get('status') == 'pending':
                     pending_cases.append(case)
     
-    return jsonify({
-        'total': len(pending_cases),
-        'cases': sorted(pending_cases, key=lambda x: x['created_at'])
-    })
+    return render_template('dashboard.html', cases=pending_cases)
 
-
-@app.route('/expert/resolve', methods=['POST'])
-def resolve_case():
-    """
-    Resolve an expert review case.
-    
-    Expects JSON body:
-    {
-        "escalation_id": "ESC_20250221...",
-        "resolved_breed": "Gir",
-        "expert_notes": "Confirmed based on hump size and color pattern",
-        "expert_id": "VET001"
-    }
-    """
-    data = request.get_json()
-    
-    if not data or 'escalation_id' not in data:
-        return jsonify({'error': 'Missing escalation_id'}), 400
-    
-    escalation_file = Path(f"../data/escalations/{data['escalation_id']}.json")
-    
-    if not escalation_file.exists():
-        return jsonify({'error': 'Escalation not found'}), 404
-    
-    # Update case
-    with open(escalation_file, 'r') as f:
-        case = json.load(f)
-    
-    case['status'] = 'resolved'
-    case['resolved_breed'] = data.get('resolved_breed')
-    case['expert_notes'] = data.get('expert_notes', '')
-    case['expert_id'] = data.get('expert_id', 'unknown')
-    case['resolved_at'] = datetime.now().isoformat()
-    
-    with open(escalation_file, 'w') as f:
-        json.dump(case, f, indent=2)
-    
-    # Also save as feedback for model improvement
-    feedback = {
-        'prediction_id': case.get('prediction_id', 'unknown'),
-        'predicted_breed': case['top_predictions'][0]['breed'] if case.get('top_predictions') else 'unknown',
-        'actual_breed': data['resolved_breed'],
-        'expert_verified': True,
-        'expert_id': data.get('expert_id', 'unknown'),
-        'timestamp': datetime.now().isoformat()
-    }
-    
-    feedback_dir = Path('../data/feedback')
-    feedback_dir.mkdir(parents=True, exist_ok=True)
-    feedback_file = feedback_dir / f"feedback_{datetime.now().strftime('%Y%m%d')}.jsonl"
-    with open(feedback_file, 'a') as f:
-        f.write(json.dumps(feedback) + '\n')
-    
-    return jsonify({
-        'status': 'success',
-        'message': 'Case resolved and recorded for model improvement',
-        'case': case
-    })
-
-
-# ==================== Error Handlers ====================
-
-@app.errorhandler(404)
-def not_found(error):
-    return jsonify({'error': 'Endpoint not found'}), 404
-
-
-@app.errorhandler(500)
-def internal_error(error):
-    return jsonify({'error': 'Internal server error'}), 500
-
-
-# ==================== Main ====================
 
 if __name__ == '__main__':
-    # Run development server
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    print("\n" + "="*60)
+    print("🐄 Cattle Breed Recognition API")
+    print("="*60)
+    print(f"\nModels Directory: {CONFIG['MODELS_DIR']}")
+    print(f"Breeds Supported: {len(ai_engine.idx_to_breed)}")
+    print(f"\nEndpoints:")
+    print(f"  - http://localhost:5000/")
+    print(f"  - http://localhost:5000/predict (POST)")
+    print(f"  - http://localhost:5000/predict/base64 (POST)")
+    print(f"  - http://localhost:5000/breeds (GET)")
+    print(f"  - http://localhost:5000/health (GET)")
+    print(f"  - http://localhost:5000/dashboard (GET)")
+    print("\n" + "="*60 + "\n")
+    
+    app.run(debug=True, host='0.0.0.0', port=5000)
