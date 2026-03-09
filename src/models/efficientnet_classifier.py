@@ -351,6 +351,119 @@ class EfficientNetClassifier:
         print(f"Exported TFLite model to {output_path}")
         print(f"Model size: {len(tflite_model) / 1024 / 1024:.2f} MB")
     
+    def export_to_tflite_int8(self, 
+                               output_path: str,
+                               representative_dataset: tf.data.Dataset = None,
+                               enable_quantization: bool = True) -> str:
+        """
+        Export model to TFLite format with INT8 quantization.
+        
+        This creates an optimized edge-deployment-ready model with:
+        - INT8 quantization for ~4x size reduction
+        - DEFAULT optimization for latency improvements
+        - Compatible with edge devices (mobile, TPU, NPU)
+        
+        Args:
+            output_path: Output .tflite file path
+            representative_dataset: Dataset for quantization calibration
+                                    (required for INT8). Use tf.data.Dataset
+                                    with batches of preprocessed images.
+            enable_quantization: Whether to apply quantization
+        
+        Returns:
+            Path to exported model
+        
+        Example:
+            >>> # Create representative dataset from validation data
+            >>> val_ds = tf.keras.preprocessing.image_dataset_from_directory(
+            ...     'data/val',
+            ...     labels='inferred',
+            ...     label_mode='categorical',
+            ...     batch_size=32,
+            ...     image_size=(224, 224)
+            ... )
+            >>> 
+            >>> # Export with INT8 quantization
+            >>> classifier.export_to_tflite_int8(
+            ...     output_path='models/tflite/efficientnet_b0_int8.tflite',
+            ...     representative_dataset=val_ds
+            ... )
+        """
+        import tensorflow as tf
+        
+        if self.model is None:
+            raise ValueError("Model not built. Call build_model() first.")
+        
+        print(f"\n{'='*60}")
+        print("Exporting EfficientNet-B0 to INT8 TFLite")
+        print(f"{'='*60}")
+        
+        # Create converter
+        converter = tf.lite.TFLiteConverter.from_keras_model(self.model)
+        
+        # Apply optimizations
+        converter.optimizations = [tf.lite.Optimize.DEFAULT]
+        
+        if enable_quantization:
+            # Set quantization parameters for INT8
+            converter.target_spec.supported_ops = [
+                tf.lite.OpsSet.TFLITE_BUILTINS_INT8,
+                tf.lite.OpsSet.TFLITE_BUILTINS
+            ]
+            
+            # Use full integer quantization
+            converter.inference_input_type = tf.int8
+            converter.inference_output_type = tf.int8
+            
+            # Set representative dataset for calibration
+            if representative_dataset is not None:
+                def representative_data_gen():
+                    count = 0
+                    for images, _ in representative_dataset:
+                        # Yield images for calibration
+                        yield [images]
+                        count += 1
+                        if count >= 100:  # Calibrate with 100 batches
+                            break
+                
+                converter.representative_dataset = representative_data_gen
+                print("✓ Representative dataset configured for INT8 calibration")
+            else:
+                print("⚠ Warning: No representative dataset provided.")
+                print("  Using float fallback quantization.")
+                converter.target_spec.supported_ops = [
+                    tf.lite.OpsSet.TFLITE_BUILTINS,
+                    tf.lite.OpsSet.TFLITE_BUILTINS_NET
+                ]
+        
+        # Convert model
+        tflite_model = converter.convert()
+        
+        # Save model
+        os.makedirs(os.path.dirname(output_path), exist_ok=True)
+        with open(output_path, 'wb') as f:
+            f.write(tflite_model)
+        
+        # Calculate sizes
+        # Estimate original size (params * 4 bytes per float32)
+        param_count = self.model.count_params()
+        original_size_mb = param_count * 4 / (1024 * 1024)
+        quantized_size_mb = len(tflite_model) / (1024 * 1024)
+        compression_ratio = original_size_mb / quantized_size_mb if quantized_size_mb > 0 else 0
+        
+        print(f"\n{'='*60}")
+        print("TFLite Export Summary")
+        print(f"{'='*60}")
+        print(f"Output path: {output_path}")
+        print(f"Parameter count: {param_count:,}")
+        print(f"Original model size: ~{original_size_mb:.1f} MB (estimated)")
+        print(f"Quantized model size: {quantized_size_mb:.2f} MB")
+        print(f"Compression ratio: {compression_ratio:.1f}x")
+        print(f"Quantization: INT8" if enable_quantization else "Float16")
+        print(f"{'='*60}\n")
+        
+        return output_path
+    
     def get_model_summary(self):
         """Print model summary."""
         if self.model is None:

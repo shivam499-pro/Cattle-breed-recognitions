@@ -47,6 +47,64 @@ CONFIG = {
 }
 
 
+# Breed rarity thresholds for dynamic decision-making
+# Strategic: Rare breeds need more expert validation for genetic conservation
+RARITY_THRESHOLDS = {
+    'rare': 0.70,      # Vechur, Punganur, Toda, Amritmahal, Bargur, Kangayam - critical for genetics
+    'moderate': 0.60,   # Gir, Sahiwal, Murrah, Hariana - important but common
+    'common': 0.50     # HF Cross, Jersey Cross - high volume, FLW can handle
+}
+
+# Define rare breeds (heritage/indigenous breeds requiring conservation priority)
+RARE_BREEDS = {
+    'Vechur', 'Punganur', 'Toda', 'Amritmahal', 'Bargur', 
+    'Kangayam', 'Malnad_Gidda', 'Krishna_Valley', 'Pulikulam',
+    'Umblachery', 'Alambadi', 'Kasargod', 'Kherigarh', 'Kenkatha', 'Nagori', 'Nimari'
+}
+
+# Define common breeds (high volume, commercial crosses)
+COMMON_BREEDS = {
+    'HF_Cross', 'Jersey_Cross', 'HF', 'Jersey', 
+    'Jaffrabadi', 'Mehsana', 'Bhadawari'
+}
+
+
+def determine_action(confidence: float, predicted_breed: str = None) -> str:
+    """
+    Determine action based on confidence and breed rarity.
+    
+    Dynamic threshold strategy for BPA:
+    - Rare breeds (0.70): Higher threshold → More expert review for conservation
+    - Moderate breeds (0.60): Standard threshold
+    - Common breeds (0.50): Lower threshold → Trust FLW for throughput
+    
+    Args:
+        confidence: Model confidence score (0-1)
+        predicted_breed: Predicted breed name (optional)
+    
+    Returns:
+        Action string: 'auto_confirm', 'flw_select', or 'expert_review'
+    """
+    # Determine threshold based on breed rarity
+    threshold = 0.60  # Default
+    
+    if predicted_breed:
+        if predicted_breed in RARE_BREEDS:
+            threshold = RARITY_THRESHOLDS['rare']  # 0.70
+        elif predicted_breed in COMMON_BREEDS:
+            threshold = RARITY_THRESHOLDS['common']  # 0.50
+        else:
+            threshold = RARITY_THRESHOLDS['moderate']  # 0.60
+    
+    # Determine action
+    if confidence >= CONFIG['CONFIDENCE_THRESHOLD']:  # >= 0.85
+        return 'auto_confirm'
+    elif confidence >= threshold:
+        return 'flw_select'
+    else:
+        return 'expert_review'
+
+
 class BreedRecognitionEngine:
     """
     Main AI engine for breed recognition.
@@ -232,12 +290,7 @@ class BreedRecognitionEngine:
                 
                 # Determine action based on confidence
                 confidence = classification['confidence']
-                if confidence >= CONFIG['CONFIDENCE_THRESHOLD']:
-                    action = 'auto_confirm'
-                elif confidence >= CONFIG['ESCALATION_THRESHOLD']:
-                    action = 'flw_select'
-                else:
-                    action = 'expert_review'
+                action = determine_action(confidence, classification.get('breed'))
                 
                 results.append({
                     'detection': {

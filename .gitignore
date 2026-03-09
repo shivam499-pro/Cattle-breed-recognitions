@@ -1,60 +1,63 @@
-﻿# Python
+﻿# Models (too large for git - use Git LFS)
+*.h5
+*.keras
+*.pt
+*.tflite
+*.onnx
+models/checkpoints/
+models/logs/
+
+# Data - DON'T PUSH to git (use Kaggle/Google Drive)
+data/train/*
+data/val/*
+data/raw/*
+!data/train/.gitkeep
+
+# Python
 __pycache__/
-*.py[cod]
-*.class
-*.so
+*.pyc
+*.pyo
+*.pyd
 .Python
-build/
-dist/
+*.so
+*.egg
 *.egg-info/
+dist/
+build/
 
 # Virtual environments
 venv/
-ENV/
 env/
 .venv/
 
-# Jupyter Notebooks
-.ipynb_checkpoints/
-
 # IDE
-.idea/
 .vscode/
+.idea/
 *.swp
+*.swo
 
-# Model files (too large for GitHub)
-# Keep model files locally and in Google Drive
-*.pt
-*.pth
-*.onnx
-*.tflite
-*.h5
-*.keras
-
-# But keep breed mapping JSON files
-!*.json
-
-# Data files
-data/raw/
-data/augmented/
-data/processed/
-data/test/
-*.zip
-*.tar.gz
-
-# YOLO runs (training logs)
-runs/
-
-# Pipeline results (generated images)
-pipeline_results/
-
-# Logs
-*.log
-
-# OS files
+# OS
 .DS_Store
 Thumbs.db
 
-# Secrets
+# Environment
 .env
-secrets.yaml
+.env.local
+
+# Notebooks (keep only specific ones)
+*.ipynb
+!notebooks/*.ipynb
+
+# Images (downloaded data)
+*.jpg
+*.jpeg
+*.png
+*.bmp
+
+# Logs
+*.log
+logs/
+
+# Temp files
+*.tmp
+temp/
