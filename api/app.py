@@ -5,9 +5,9 @@ BPA Integration API - Cattle Breed Recognition Module
 This Flask API provides endpoints for integrating the AI breed recognition
 module with the existing Bharat Pashudhan App (BPA).
 
-Two-Stage Pipeline:
+Two-Stage Pipeline (Phase 2 - Optimized):
   Stage 1: YOLOv8-Nano - Detect cattle in image
-  Stage 2: EfficientNet-B0 - Classify breed (41 breeds)
+  Stage 2: MobileNetV2 (TFLite INT8) - Classify breed (60 breeds)
 
 Author: SIH 2025 Team
 Problem Statement: SIH25004
@@ -45,6 +45,24 @@ CONFIG = {
     'MAX_IMAGE_SIZE': 10 * 1024 * 1024,  # 10MB max
     'SUPPORTED_FORMATS': ['jpg', 'jpeg', 'png', 'webp']
 }
+
+# 60 Breeds from data/train folder - EXACT folder names in alphabetical order
+# Matching exactly as they appear in the folder structure
+CLASS_NAMES = sorted([
+    'Alambadi', 'Amritmahal', 'Ayrshire', 'Banni', 'Bargur', 'Bhadawari',
+    'Brahman', 'Brahman Cross', 'Brown_Swiss', 'Chhattisgarhi', 'Chilika', 'Cholistani',
+    'Cholistani Cross', 'Dangi', 'Deoni', 'Dhani', 'Fresian Cross', 'Gir',
+    'Gojri', 'Guernsey', 'Hallikar', 'Hariana', 'Holstein_Friesian', 'Jaffarabadi',
+    'Jersey', 'Kalahandi', 'Kangayam', 'Kankrej', 'Kasargod', 'Kenkatha',
+    'Kherigarh', 'Khillari', 'Krishna_Valley', 'Luit', 'Malnad_gidda', 'Marathwada',
+    'Mehsana', 'Murrah', 'Nagori', 'Nagpuri', 'Nili-ravi', 'Nili_Ravi', 'Nimari',
+    'Ongole', 'Pandharpuri', 'Pulikulam', 'Rathi', 'Red_Dane', 'Red_Sindhi',
+    'Sahiwal', 'Sahiwal Cross', 'Sibbi', 'Surti', 'Tharparkar', 'Toda',
+    'Umblachery', 'Vechur', 'luit_(swamp)', 'marathwadi', 'unidentified (mixed)'
+])
+
+# Create index mapping - exactly 60 classes for TFLite model
+IDX_TO_BREED = {i: CLASS_NAMES[i] for i in range(len(CLASS_NAMES))}
 
 
 # Breed rarity thresholds for dynamic decision-making
@@ -134,24 +152,35 @@ class BreedRecognitionEngine:
         else:
             logger.warning(f"❌ YOLO model not found: {yolo_path}")
         
-        # Load EfficientNet-B0 classifier
-        classifier_path = os.path.join(self.models_dir, 'breed_classifier_v2.keras')
-        if os.path.exists(classifier_path):
-            from tensorflow.keras.models import load_model
-            self.classifier = load_model(classifier_path)
-            logger.info(f"✅ Loaded EfficientNet-B0 classifier: {classifier_path}")
+        # Load MobileNetV2 TFLite classifier (Phase 2)
+        tflite_path = os.path.join(self.models_dir, 'tflite', 'cattle_breed_pro_v1_int8.tflite')
+        if os.path.exists(tflite_path):
+            import tensorflow as tf
+            self.classifier = tf.lite.Interpreter(model_path=tflite_path)
+            self.classifier.allocate_tensors()
+            
+            # Get input/output details
+            self.input_details = self.classifier.get_input_details()
+            self.output_details = self.classifier.get_output_details()
+            
+            logger.info(f"✅ Loaded MobileNetV2 TFLite classifier: {tflite_path}")
+            logger.info(f"   Input shape: {self.input_details[0]['shape']}")
+            logger.info(f"   Output shape: {self.output_details[0]['shape']}")
         else:
-            logger.warning(f"❌ Classifier not found: {classifier_path}")
+            # Fallback to Keras model if TFLite not available
+            classifier_path = os.path.join(self.models_dir, 'breed_classifier_v2.keras')
+            if os.path.exists(classifier_path):
+                from tensorflow.keras.models import load_model
+                self.classifier = load_model(classifier_path)
+                self.input_details = None
+                self.output_details = None
+                logger.info(f"⚠️ TFLite not found, using Keras fallback: {classifier_path}")
+            else:
+                logger.warning(f"❌ Classifier not found: {tflite_path}")
         
-        # Load breed mapping
-        mapping_path = os.path.join(self.models_dir, 'breed_mapping_v2.json')
-        if os.path.exists(mapping_path):
-            with open(mapping_path, 'r') as f:
-                self.breed_mapping = json.load(f)
-            self.idx_to_breed = {int(k): v for k, v in self.breed_mapping.items()}
-            logger.info(f"✅ Loaded breed mapping: {len(self.idx_to_breed)} breeds")
-        else:
-            logger.warning(f"❌ Breed mapping not found: {mapping_path}")
+        # Use CLASS_NAMES for 60 breeds
+        self.idx_to_breed = IDX_TO_BREED
+        logger.info(f"✅ Loaded breed mapping: {len(self.idx_to_breed)} breeds")
     
     def detect_cattle(self, image_array, conf_threshold=0.5):
         """
@@ -207,7 +236,7 @@ class BreedRecognitionEngine:
     
     def classify_breed(self, image_crop):
         """
-        Classify breed using EfficientNet-B0.
+        Classify breed using MobileNetV2 (TFLite) or EfficientNet-B0 (fallback).
         
         Args:
             image_crop: numpy array (BGR format)
@@ -215,7 +244,7 @@ class BreedRecognitionEngine:
         Returns:
             dict: Classification results with breed, confidence, and top predictions
         """
-        if self.classifier is None or image_crop is None:
+        if image_crop is None:
             return {
                 'breed': 'Unknown',
                 'confidence': 0.0,
@@ -223,24 +252,56 @@ class BreedRecognitionEngine:
             }
         
         try:
-            from tensorflow.keras.applications.efficientnet import preprocess_input
+            import cv2
             
             # Convert BGR to RGB
-            image_rgb = image_crop[:, :, ::-1]
+            image_rgb = cv2.cvtColor(image_crop, cv2.COLOR_BGR2RGB)
             
             # Resize to 224x224
-            pil_image = Image.fromarray(image_rgb)
-            pil_image = pil_image.resize((224, 224))
+            image_resized = cv2.resize(image_rgb, (224, 224))
             
-            # Convert to array and preprocess
-            img_array = np.array(pil_image)
-            if img_array.shape[-1] == 4:  # RGBA to RGB
-                img_array = img_array[:, :, :3]
-            img_array = preprocess_input(img_array)
-            img_batch = np.expand_dims(img_array, axis=0)
+            # Normalize to float32 [0, 1]
+            img_array = image_resized.astype(np.float32) / 255.0
             
-            # Predict
-            predictions = self.classifier.predict(img_batch, verbose=0)[0]
+            # Check if using TFLite or Keras
+            if hasattr(self, 'input_details') and self.input_details is not None:
+                # Using TFLite Interpreter
+                # Handle quantized input
+                input_dtype = self.input_details[0]['dtype']
+                
+                if input_dtype == np.int8:
+                    # Quantize to int8
+                    input_scale = self.input_details[0]['quantization_parameters']['scales'][0]
+                    input_zero_point = self.input_details[0]['quantization_parameters']['zero_points'][0]
+                    img_array = (img_array / input_scale + input_zero_point).astype(np.int8)
+                
+                # Add batch dimension
+                img_batch = np.expand_dims(img_array, axis=0)
+                
+                # Set input tensor
+                self.classifier.set_tensor(self.input_details[0]['index'], img_array)
+                
+                # Run inference
+                self.classifier.invoke()
+                
+                # Get output
+                output = self.classifier.get_tensor(self.output_details[0]['index'])
+                
+                # Handle quantized output
+                if self.output_details[0]['dtype'] == np.int8:
+                    output_scale = self.output_details[0]['quantization_parameters']['scales'][0]
+                    output_zero_point = self.output_details[0]['quantization_parameters']['zero_points'][0]
+                    predictions = (output.astype(np.float32) - output_zero_point) * output_scale
+                else:
+                    predictions = output[0]
+            else:
+                # Using Keras model (fallback)
+                from tensorflow.keras.applications.efficientnet import preprocess_input
+                
+                img_batch = preprocess_input(img_array.astype(np.float32))
+                img_batch = np.expand_dims(img_batch, axis=0)
+                
+                predictions = self.classifier.predict(img_batch, verbose=0)[0]
             
             # Get top 3 predictions
             top_3_indices = np.argsort(predictions)[-3:][::-1]
@@ -333,7 +394,7 @@ def api_info():
         'description': 'AI-powered breed recognition for Bharat Pashudhan App',
         'models': {
             'detection': 'YOLOv8-Nano (99.5% mAP)',
-            'classification': 'EfficientNet-B0 (72.61% accuracy, 41 breeds)'
+            'classification': f'MobileNetV2 TFLite ({len(CLASS_NAMES)} breeds)'
         },
         'endpoints': {
             'POST /predict': 'Predict breed from uploaded image',
@@ -355,7 +416,7 @@ def health_check():
             'detector': ai_engine.yolo_model is not None,
             'classifier': ai_engine.classifier is not None
         },
-        'breeds_count': len(ai_engine.idx_to_breed),
+        'breeds_count': len(CLASS_NAMES),
         'timestamp': datetime.now().isoformat()
     })
 
@@ -363,19 +424,25 @@ def health_check():
 @app.route('/breeds', methods=['GET'])
 def list_breeds():
     """List all supported breeds."""
-    breeds = sorted(ai_engine.idx_to_breed.values())
+    breeds = sorted(CLASS_NAMES)
     
     # Categorize breeds
-    cattle_breeds = ['Alambadi', 'Amritmahal', 'Bargur', 'Dangi', 'Deoni', 'Gir', 
-                     'Hallikar', 'Hariana', 'Kangayam', 'Kankrej', 'Kasargod',
-                     'Kenkatha', 'Kherigarh', 'Khillari', 'Krishna_Valley',
-                     'Malnad_gidda', 'Nagori', 'Nagpuri', 'Nimari', 'Ongole',
-                     'Pulikulam', 'Rathi', 'Red_Sindhi', 'Sahiwal', 'Tharparkar',
-                     'Toda', 'Umblachery', 'Vechur']
-    buffalo_breeds = ['Banni', 'Bhadawari', 'Jaffrabadi', 'Mehsana', 'Murrah',
-                      'Nili_Ravi', 'Surti']
-    foreign_breeds = ['Ayrshire', 'Brown_Swiss', 'Guernsey', 'Holstein_Friesian',
-                      'Jersey', 'Red_Dane']
+    cattle_breeds = [
+        'Alambadi', 'Amritmahal', 'Bargur', 'Dangi', 'Deoni', 'Gir', 
+        'Hallikar', 'Hariana', 'Kangayam', 'Kankrej', 'Kasargod',
+        'Kenkatha', 'Kherigarh', 'Khillari', 'Krishna_Valley',
+        'Malnad_gidda', 'Nagori', 'Nagpuri', 'Nimari', 'Ongole',
+        'Pulikulam', 'Rathi', 'Red_Sindhi', 'Sahiwal', 'Tharparkar',
+        'Toda', 'Umblachery', 'Vechur', 'Gojri', 'Chhattisgarhi', 'Luit'
+    ]
+    buffalo_breeds = [
+        'Banni', 'Bhadawari', 'Jaffarabadi', 'Mehsana', 'Murrah',
+        'Nili_Ravi', 'Surti', 'Pandharpuri', 'Chilika'
+    ]
+    foreign_breeds = [
+        'Ayrshire', 'Brown_Swiss', 'Guernsey', 'Holstein_Friesian',
+        'Jersey', 'Red_Dane', 'Brahman', 'Brahman Cross', 'Fresian Cross', 'Sahiwal Cross'
+    ]
     
     return jsonify({
         'total': len(breeds),
