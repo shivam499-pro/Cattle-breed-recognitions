@@ -1,0 +1,321 @@
+{
+  "config_a": {
+    "classes": {
+      "Alambadi": 317,
+      "Ayrshire": 248,
+      "Banni": 288,
+      "Gir": 367,
+      "Holstein_Friesian": 394,
+      "Jaffrabadi": 302,
+      "Kankrej": 307,
+      "Murrah": 388,
+      "Nagpuri": 458,
+      "Sahiwal": 594,
+      "Nili_Ravi": 280,
+      "Bargur": 268,
+      "Bhadawari": 248,
+      "Brown_Swiss": 244,
+      "Toda": 244,
+      "Red_Cattle": 331,
+      "Draft_Breeds": 786,
+      "Buffalo": 695,
+      "Zebu": 339
+    },
+    "count": 19,
+    "total_images": 7098
+  },
+  "config_b": {
+    "classes": {
+      "Alambadi": 317,
+      "Ayrshire": 248,
+      "Banni": 288,
+      "Gir": 367,
+      "Holstein_Friesian": 394,
+      "Jaffrabadi": 302,
+      "Kankrej": 307,
+      "Murrah": 388,
+      "Nagpuri": 458,
+      "Sahiwal": 594,
+      "Bargur": 268,
+      "Bhadawari": 248,
+      "Brown_Swiss": 244,
+      "Hallikar": 223,
+      "Hariana": 157,
+      "Jersey": 223,
+      "Khillari": 159,
+      "Krishna_Valley": 167,
+      "Malnad_gidda": 158,
+      "Mehsana": 237,
+      "Nili_Ravi": 280,
+      "Ongole": 182,
+      "Surti": 238,
+      "Tharparkar": 215,
+      "Toda": 244,
+      "Amritmahal": 126,
+      "Dangi": 108,
+      "Deoni": 129,
+      "Guernsey": 126,
+      "Kangayam": 130,
+      "Kasargod": 117,
+      "Pulikulam": 125,
+      "Rathi": 148,
+      "Red_Dane": 166,
+      "Red_Sindhi": 165,
+      "Rare_Breeds": 394,
+      "Red_Cattle": 331,
+      "Draft_Breeds": 349
+    },
+    "count": 38,
+    "total_images": 9320
+  },
+  "config_c": {
+    "classes": {
+      "Alambadi": 317,
+      "Amritmahal": 126,
+      "Ayrshire": 248,
+      "Banni": 288,
+      "Bargur": 268,
+      "Bhadawari": 248,
+      "Brown_Swiss": 244,
+      "Dangi": 108,
+      "Deoni": 129,
+      "Gir": 367,
+      "Guernsey": 126,
+      "Hallikar": 223,
+      "Hariana": 157,
+      "Holstein_Friesian": 394,
+      "Jaffrabadi": 302,
+      "Jersey": 223,
+      "Kangayam": 130,
+      "Kankrej": 307,
+      "Kasargod": 117,
+      "Khillari": 159,
+      "Krishna_Valley": 167,
+      "Malnad_gidda": 158,
+      "Mehsana": 237,
+      "Murrah": 388,
+      "Nagpuri": 458,
+      "Nili_Ravi": 280,
+      "Ongole": 182,
+      "Pulikulam": 125,
+      "Rathi": 148,
+      "Red_Dane": 166,
+      "Red_Sindhi": 165,
+      "Sahiwal": 594,
+      "Surti": 238,
+      "Tharparkar": 215,
+      "Toda": 244,
+      "Umblachery": 76,
+      "Vechur": 140
+    },
+    "count": 37,
+    "total_images": 8462
+  },
+  "breed_scores": {
+    "Alambadi": {
+      "score": 40,
+      "tier": "TIER_1",
+      "total": 317
+    },
+    "Amritmahal": {
+      "score": 10,
+      "tier": "TIER_3",
+      "total": 126
+    },
+    "Ayrshire": {
+      "score": 30,
+      "tier": "TIER_1",
+      "total": 248
+    },
+    "Banni": {
+      "score": 30,
+      "tier": "TIER_1",
+      "total": 288
+    },
+    "Bargur": {
+      "score": 25,
+      "tier": "TIER_2",
+      "total": 268
+    },
+    "Bhadawari": {
+      "score": 27,
+      "tier": "TIER_2",
+      "total": 248
+    },
+    "Brown_Swiss": {
+      "score": 30,
+      "tier": "TIER_2",
+      "total": 244
+    },
+    "Dangi": {
+      "score": 10,
+      "tier": "TIER_3",
+      "total": 108
+    },
+    "Deoni": {
+      "score": 10,
+      "tier": "TIER_3",
+      "total": 129
+    },
+    "Gir": {
+      "score": 40,
+      "tier": "TIER_1",
+      "total": 367
+    },
+    "Guernsey": {
+      "score": 10,
+      "tier": "TIER_3",
+      "total": 126
+    },
+    "Hallikar": {
+      "score": 30,
+      "tier": "TIER_2",
+      "total": 223
+    },
+    "Hariana": {
+      "score": 20,
+      "tier": "TIER_2",
+      "total": 157
+    },
+    "Holstein_Friesian": {
+      "score": 38,
+      "tier": "TIER_1",
+      "total": 394
+    },
+    "Jaffrabadi": {
+      "score": 40,
+      "tier": "TIER_1",
+      "total": 302
+    },
+    "Jersey": {
+      "score": 30,
+      "tier": "TIER_2",
+      "total": 223
+    },
+    "Kangayam": {
+      "score": 10,
+      "tier": "TIER_3",
+      "total": 130
+    },
+    "Kankrej": {
+      "score": 38,
+      "tier": "TIER_1",
+      "total": 307
+    },
+    "Kasargod": {
+      "score": 10,
+      "tier": "TIER_3",
+      "total": 117
+    },
+    "Kenkatha": {
+      "score": 5,
+      "tier": "TIER_4",
+      "total": 84
+    },
+    "Kherigarh": {
+      "score": 5,
+      "tier": "TIER_4",
+      "total": 64
+    },
+    "Khillari": {
+      "score": 20,
+      "tier": "TIER_2",
+      "total": 159
+    },
+    "Krishna_Valley": {
+      "score": 20,
+      "tier": "TIER_2",
+      "total": 167
+    },
+    "Malnad_gidda": {
+      "score": 20,
+      "tier": "TIER_2",
+      "total": 158
+    },
+    "Mehsana": {
+      "score": 30,
+      "tier": "TIER_2",
+      "total": 237
+    },
+    "Murrah": {
+      "score": 40,
+      "tier": "TIER_1",
+      "total": 388
+    },
+    "Nagori": {
+      "score": 5,
+      "tier": "TIER_4",
+      "total": 86
+    },
+    "Nagpuri": {
+      "score": 40,
+      "tier": "TIER_1",
+      "total": 458
+    },
+    "Nili_Ravi": {
+      "score": 30,
+      "tier": "TIER_2",
+      "total": 280
+    },
+    "Nimari": {
+      "score": 5,
+      "tier": "TIER_4",
+      "total": 84
+    },
+    "Ongole": {
+      "score": 20,
+      "tier": "TIER_2",
+      "total": 182
+    },
+    "Pulikulam": {
+      "score": 10,
+      "tier": "TIER_3",
+      "total": 125
+    },
+    "Rathi": {
+      "score": 10,
+      "tier": "TIER_3",
+      "total": 148
+    },
+    "Red_Dane": {
+      "score": 20,
+      "tier": "TIER_3",
+      "total": 166
+    },
+    "Red_Sindhi": {
+      "score": 20,
+      "tier": "TIER_3",
+      "total": 165
+    },
+    "Sahiwal": {
+      "score": 40,
+      "tier": "TIER_1",
+      "total": 594
+    },
+    "Surti": {
+      "score": 30,
+      "tier": "TIER_2",
+      "total": 238
+    },
+    "Tharparkar": {
+      "score": 30,
+      "tier": "TIER_2",
+      "total": 215
+    },
+    "Toda": {
+      "score": 30,
+      "tier": "TIER_2",
+      "total": 244
+    },
+    "Umblachery": {
+      "score": 5,
+      "tier": "TIER_4",
+      "total": 76
+    },
+    "Vechur": {
+      "score": 10,
+      "tier": "TIER_4",
+      "total": 140
+    }
+  }
+}

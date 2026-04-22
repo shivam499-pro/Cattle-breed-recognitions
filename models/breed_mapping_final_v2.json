@@ -1,0 +1,156 @@
+{
+  "classes": {
+    "0": "Alambadi",
+    "1": "Ayrshire",
+    "2": "Banni",
+    "3": "Bargur",
+    "4": "Bhadawari",
+    "5": "Brown_Swiss",
+    "6": "Draft_South",
+    "7": "Gir",
+    "8": "Hariana",
+    "9": "Holstein_Friesian",
+    "10": "Jaffrabadi",
+    "11": "Jersey",
+    "12": "K_Draft",
+    "13": "Khillari",
+    "14": "Krishna_Valley",
+    "15": "Malnad_gidda",
+    "16": "Mehsana",
+    "17": "Murrah",
+    "18": "Nagpuri",
+    "19": "Nili_Ravi",
+    "20": "Ongole",
+    "21": "Rathi",
+    "22": "Red_Cattle",
+    "23": "Sahiwal",
+    "24": "Tharparkar"
+  },
+  "stats": {
+    "Alambadi": {
+      "train": 221,
+      "val": 47,
+      "test": 49
+    },
+    "Ayrshire": {
+      "train": 173,
+      "val": 37,
+      "test": 38
+    },
+    "Banni": {
+      "train": 201,
+      "val": 43,
+      "test": 44
+    },
+    "Bargur": {
+      "train": 188,
+      "val": 40,
+      "test": 41
+    },
+    "Bhadawari": {
+      "train": 173,
+      "val": 37,
+      "test": 38
+    },
+    "Brown_Swiss": {
+      "train": 170,
+      "val": 36,
+      "test": 38
+    },
+    "Draft_South": {
+      "train": 244,
+      "val": 51,
+      "test": 54
+    },
+    "Gir": {
+      "train": 256,
+      "val": 55,
+      "test": 56
+    },
+    "Hariana": {
+      "train": 109,
+      "val": 23,
+      "test": 25
+    },
+    "Holstein_Friesian": {
+      "train": 276,
+      "val": 59,
+      "test": 60
+    },
+    "Jaffrabadi": {
+      "train": 211,
+      "val": 45,
+      "test": 46
+    },
+    "Jersey": {
+      "train": 156,
+      "val": 33,
+      "test": 34
+    },
+    "K_Draft": {
+      "train": 306,
+      "val": 65,
+      "test": 67
+    },
+    "Khillari": {
+      "train": 111,
+      "val": 23,
+      "test": 25
+    },
+    "Krishna_Valley": {
+      "train": 116,
+      "val": 25,
+      "test": 26
+    },
+    "Malnad_gidda": {
+      "train": 110,
+      "val": 23,
+      "test": 25
+    },
+    "Mehsana": {
+      "train": 165,
+      "val": 35,
+      "test": 37
+    },
+    "Murrah": {
+      "train": 271,
+      "val": 58,
+      "test": 59
+    },
+    "Nagpuri": {
+      "train": 320,
+      "val": 68,
+      "test": 70
+    },
+    "Nili_Ravi": {
+      "train": 196,
+      "val": 42,
+      "test": 42
+    },
+    "Ongole": {
+      "train": 127,
+      "val": 27,
+      "test": 28
+    },
+    "Rathi": {
+      "train": 103,
+      "val": 22,
+      "test": 23
+    },
+    "Red_Cattle": {
+      "train": 231,
+      "val": 48,
+      "test": 52
+    },
+    "Sahiwal": {
+      "train": 416,
+      "val": 89,
+      "test": 90
+    },
+    "Tharparkar": {
+      "train": 150,
+      "val": 32,
+      "test": 33
+    }
+  }
+}

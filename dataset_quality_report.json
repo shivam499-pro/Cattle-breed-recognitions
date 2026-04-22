@@ -1,0 +1,1200 @@
+{
+  "summary": {
+    "total_breeds": 41,
+    "total_images": 6125,
+    "average_images_per_breed": 149,
+    "total_irrelevant_files": 3,
+    "total_duplicates": 12,
+    "total_small_files": 0
+  },
+  "breeds": [
+    {
+      "breed_name": "Alambadi",
+      "total_images": 221,
+      "irrelevant_files": [],
+      "file_type_distribution": {
+        ".jpg": 170,
+        ".png": 51
+      },
+      "sample_images": [
+        "alambadi_0109.png",
+        "alambadi_0138.jpg",
+        "alambadi_0153.jpg",
+        "Alambadi_048.jpg",
+        "000007.jpg",
+        "Alambadi_023.jpg",
+        "Alambadi_050.jpg",
+        "Alambadi_079.jpg",
+        "alambadi_0031.jpg",
+        "alambadi_0103.jpg"
+      ],
+      "duplicates": {},
+      "small_files": [],
+      "large_files": [],
+      "min_size": 11430,
+      "max_size": 3152473,
+      "avg_size": 425237,
+      "issues_score": 0
+    },
+    {
+      "breed_name": "Amritmahal",
+      "total_images": 88,
+      "irrelevant_files": [],
+      "file_type_distribution": {
+        ".jpg": 88
+      },
+      "sample_images": [
+        "000007.jpg",
+        "Amritmahal_029.jpg",
+        "Amritmahal_027.jpg",
+        "amritmahal_0001.jpg",
+        "Amritmahal_068.jpg",
+        "Amritmahal_050.jpg",
+        "000022.jpg",
+        "000030.jpg",
+        "Amritmahal_026.jpg",
+        "Amritmahal_077.jpg"
+      ],
+      "duplicates": {},
+      "small_files": [],
+      "large_files": [],
+      "min_size": 11523,
+      "max_size": 2057586,
+      "avg_size": 82877,
+      "issues_score": 0
+    },
+    {
+      "breed_name": "Ayrshire",
+      "total_images": 173,
+      "irrelevant_files": [],
+      "file_type_distribution": {
+        ".jpg": 173
+      },
+      "sample_images": [
+        "Ayrshire_089.jpg",
+        "Ayrshire_097.jpg",
+        "Ayrshire_117.jpg",
+        "Ayrshire_205.jpg",
+        "Ayrshire_195.jpg",
+        "Ayrshire_071.jpg",
+        "Ayrshire_193.jpg",
+        "Ayrshire_032.jpg",
+        "Ayrshire_211.jpg",
+        "Ayrshire_046.jpg"
+      ],
+      "duplicates": {},
+      "small_files": [],
+      "large_files": [],
+      "min_size": 11628,
+      "max_size": 476289,
+      "avg_size": 37844,
+      "issues_score": 0
+    },
+    {
+      "breed_name": "Banni",
+      "total_images": 201,
+      "irrelevant_files": [],
+      "file_type_distribution": {
+        ".jpg": 181,
+        ".jpeg": 15,
+        ".png": 4,
+        ".gif": 1
+      },
+      "sample_images": [
+        "banni_0088.jpg",
+        "banni_0048.jpg",
+        "Banni_105.jpg",
+        "banni_0085.jpg",
+        "Banni_071.jpg",
+        "banni_0041.jpg",
+        "Banni_014.jpg",
+        "banni_0012.jpg",
+        "1758178212698_IMG_3836.jpeg",
+        "1_dd1190b0-b73c-486c-804f-34d6e4f01102_medium.png"
+      ],
+      "duplicates": {},
+      "small_files": [],
+      "large_files": [],
+      "min_size": 10311,
+      "max_size": 9247660,
+      "avg_size": 227922,
+      "issues_score": 0
+    },
+    {
+      "breed_name": "Bargur",
+      "total_images": 187,
+      "irrelevant_files": [
+        "desktop.ini"
+      ],
+      "file_type_distribution": {
+        ".jpg": 187
+      },
+      "sample_images": [
+        "bargur_0074.jpg",
+        "Bargur_085.jpg",
+        "image_275x183_12.jpg",
+        "Bubalus_bubalis_swamp_buffalo.jpg",
+        "bargur_0017.jpg",
+        "bargur_0026.jpg",
+        "bargur_0041.jpg",
+        "bargur_0022.jpg",
+        "bargur_0056.jpg",
+        "Bargur_037.jpg"
+      ],
+      "duplicates": {},
+      "small_files": [],
+      "large_files": [],
+      "min_size": 10549,
+      "max_size": 397086,
+      "avg_size": 48365,
+      "issues_score": 1
+    },
+    {
+      "breed_name": "Bhadawari",
+      "total_images": 173,
+      "irrelevant_files": [],
+      "file_type_distribution": {
+        ".jpg": 173
+      },
+      "sample_images": [
+        "bhadawari_0101.jpg",
+        "Bhadawari_012.jpg",
+        "Bhadawari_039.jpg",
+        "bhadawari_0058.jpg",
+        "bhadawari_0062.jpg",
+        "Bhadawari_Water_Buffalo_Facts_Milk_ (2).jpg",
+        "bhadawari_0061.jpg",
+        "bhadawari_0019.jpg",
+        "List_of_water_buffalo_breeds_-_Wikipedia.jpg",
+        "Bhadawari_070.jpg"
+      ],
+      "duplicates": {},
+      "small_files": [],
+      "large_files": [],
+      "min_size": 10435,
+      "max_size": 138850,
+      "avg_size": 29876,
+      "issues_score": 0
+    },
+    {
+      "breed_name": "Brown_Swiss",
+      "total_images": 170,
+      "irrelevant_files": [],
+      "file_type_distribution": {
+        ".jpg": 170
+      },
+      "sample_images": [
+        "000020.jpg",
+        "000007.jpg",
+        "Brown_Swiss_137.jpg",
+        "Brown_Swiss_036.jpg",
+        "Brown_Swiss_080.jpg",
+        "Brown_Swiss_139.jpg",
+        "Brown_Swiss_150.jpg",
+        "Brown_Swiss_016.jpg",
+        "Brown_Swiss_219.jpg",
+        "Brown_Swiss_213.jpg"
+      ],
+      "duplicates": {},
+      "small_files": [],
+      "large_files": [],
+      "min_size": 12152,
+      "max_size": 2210711,
+      "avg_size": 64404,
+      "issues_score": 0
+    },
+    {
+      "breed_name": "Dangi",
+      "total_images": 75,
+      "irrelevant_files": [],
+      "file_type_distribution": {
+        ".jpg": 75
+      },
+      "sample_images": [
+        "Dangi_002.jpg",
+        "000026.jpg",
+        "Dangi_073.jpg",
+        "000021.jpg",
+        "Dangi_081.jpg",
+        "000016.jpg",
+        "Dangi_033.jpg",
+        "Dangi_037.jpg",
+        "Dangi_040.jpg",
+        "Dangi_064.jpg"
+      ],
+      "duplicates": {},
+      "small_files": [],
+      "large_files": [],
+      "min_size": 11407,
+      "max_size": 587409,
+      "avg_size": 56081,
+      "issues_score": 0
+    },
+    {
+      "breed_name": "Deoni",
+      "total_images": 90,
+      "irrelevant_files": [],
+      "file_type_distribution": {
+        ".jpg": 90
+      },
+      "sample_images": [
+        "Deoni_064.jpg",
+        "Deoni_055.jpg",
+        "Deoni_044.jpg",
+        "Deoni_072.jpg",
+        "000035.jpg",
+        "000032.jpg",
+        "Deoni_002.jpg",
+        "Deoni_085.jpg",
+        "Deoni_013.jpg",
+        "000004.jpg"
+      ],
+      "duplicates": {},
+      "small_files": [],
+      "large_files": [],
+      "min_size": 13820,
+      "max_size": 499708,
+      "avg_size": 49764,
+      "issues_score": 0
+    },
+    {
+      "breed_name": "Gir",
+      "total_images": 256,
+      "irrelevant_files": [],
+      "file_type_distribution": {
+        ".jpg": 256
+      },
+      "sample_images": [
+        "Gir_034.jpg",
+        "Gir_062.jpg",
+        "000018.jpg",
+        "000016.jpg",
+        "Gir_335.jpg",
+        "Gir_224.jpg",
+        "Gir_013.jpg",
+        "Gir_304.jpg",
+        "Gir_371.jpg",
+        "Gir_172.jpg"
+      ],
+      "duplicates": {},
+      "small_files": [],
+      "large_files": [],
+      "min_size": 11514,
+      "max_size": 2005145,
+      "avg_size": 39909,
+      "issues_score": 0
+    },
+    {
+      "breed_name": "Guernsey",
+      "total_images": 88,
+      "irrelevant_files": [],
+      "file_type_distribution": {
+        ".jpg": 88
+      },
+      "sample_images": [
+        "Guernsey_041.jpg",
+        "Guernsey_107.jpg",
+        "Guernsey_090.jpg",
+        "Guernsey_071.jpg",
+        "Guernsey_094.jpg",
+        "Guernsey_082.jpg",
+        "Guernsey_086.jpg",
+        "Guernsey_060.jpg",
+        "Guernsey_104.jpg",
+        "Guernsey_089.jpg"
+      ],
+      "duplicates": {},
+      "small_files": [],
+      "large_files": [],
+      "min_size": 13303,
+      "max_size": 446551,
+      "avg_size": 33476,
+      "issues_score": 0
+    },
+    {
+      "breed_name": "Hallikar",
+      "total_images": 156,
+      "irrelevant_files": [],
+      "file_type_distribution": {
+        ".jpg": 156
+      },
+      "sample_images": [
+        "Hallikar_067.jpg",
+        "Hallikar_151.jpg",
+        "Hallikar_071.jpg",
+        "000030.jpg",
+        "Hallikar_029.jpg",
+        "Hallikar_166.jpg",
+        "Hallikar_169.jpg",
+        "000028.jpg",
+        "Hallikar_147.jpg",
+        "Hallikar_058.jpg"
+      ],
+      "duplicates": {},
+      "small_files": [],
+      "large_files": [],
+      "min_size": 12799,
+      "max_size": 1850450,
+      "avg_size": 50181,
+      "issues_score": 0
+    },
+    {
+      "breed_name": "Hariana",
+      "total_images": 109,
+      "irrelevant_files": [],
+      "file_type_distribution": {
+        ".jpg": 109
+      },
+      "sample_images": [
+        "Hariana_090.jpg",
+        "Hariana_057.jpg",
+        "Hariana_028.jpg",
+        "Hariana_017.jpg",
+        "Hariana_044.jpg",
+        "Hariana_092.jpg",
+        "Hariana_036.jpg",
+        "Hariana_068.jpg",
+        "Hariana_113.jpg",
+        "Hariana_023.jpg"
+      ],
+      "duplicates": {},
+      "small_files": [],
+      "large_files": [],
+      "min_size": 10453,
+      "max_size": 142073,
+      "avg_size": 25622,
+      "issues_score": 0
+    },
+    {
+      "breed_name": "Holstein_Friesian",
+      "total_images": 275,
+      "irrelevant_files": [
+        "fresian_70.ini"
+      ],
+      "file_type_distribution": {
+        ".jpg": 272,
+        ".png": 3
+      },
+      "sample_images": [
+        "Holstein_Friesian_237.jpg",
+        "Holstein_Friesian_110.jpg",
+        "Holstein_Friesian_091.jpg",
+        "Holstein_Friesian_133.jpg",
+        "fresian_11.jpg",
+        "Holstein_Friesian_074.jpg",
+        "Holstein_Friesian_268.jpg",
+        "Holstein_Friesian_097.jpg",
+        "Holstein_Friesian_281.jpg",
+        "Holstein_Friesian_282.jpg"
+      ],
+      "duplicates": {},
+      "small_files": [],
+      "large_files": [],
+      "min_size": 10982,
+      "max_size": 3736221,
+      "avg_size": 76939,
+      "issues_score": 1
+    },
+    {
+      "breed_name": "Jaffrabadi",
+      "total_images": 211,
+      "irrelevant_files": [],
+      "file_type_distribution": {
+        ".jpg": 175,
+        ".png": 35,
+        ".gif": 1
+      },
+      "sample_images": [
+        "jaffarabadi_0080.jpg",
+        "animal_husbandry_jafarabadi_buffalo_.jpg",
+        "Jaffrabadi_048.jpg",
+        "jaffarabadi_0035.jpg",
+        "bhes_jafrabadi_-Buffalo_Buy-Sell.jpg",
+        "jaffarabadi_0072.png",
+        "Jafrabadi_Buffalo.jpg",
+        "jaffarabadi_0112.jpg",
+        "Jaffrabadi_077.jpg",
+        "jaffarabadi_0082.png"
+      ],
+      "duplicates": {},
+      "small_files": [],
+      "large_files": [],
+      "min_size": 10264,
+      "max_size": 2048435,
+      "avg_size": 249095,
+      "issues_score": 0
+    },
+    {
+      "breed_name": "Jersey",
+      "total_images": 156,
+      "irrelevant_files": [],
+      "file_type_distribution": {
+        ".jpg": 156
+      },
+      "sample_images": [
+        "Jersey_051.jpg",
+        "000021.jpg",
+        "Jersey_027.jpg",
+        "Jersey_008.jpg",
+        "Jersey_033.jpg",
+        "Jersey_175.jpg",
+        "000008.jpg",
+        "Jersey_118.jpg",
+        "Jersey_174.jpg",
+        "Jersey_079.jpg"
+      ],
+      "duplicates": {},
+      "small_files": [],
+      "large_files": [],
+      "min_size": 14187,
+      "max_size": 1550161,
+      "avg_size": 46828,
+      "issues_score": 0
+    },
+    {
+      "breed_name": "Kangayam",
+      "total_images": 91,
+      "irrelevant_files": [],
+      "file_type_distribution": {
+        ".jpg": 91
+      },
+      "sample_images": [
+        "Kangayam_018.jpg",
+        "Kangayam_078.jpg",
+        "Kangayam_047.jpg",
+        "Kangayam_029.jpg",
+        "000034.jpg",
+        "Kangayam_055.jpg",
+        "Kangayam_061.jpg",
+        "Kangayam_079.jpg",
+        "Kangayam_084.jpg",
+        "Kangayam_007.jpg"
+      ],
+      "duplicates": {},
+      "small_files": [],
+      "large_files": [],
+      "min_size": 13874,
+      "max_size": 518454,
+      "avg_size": 70102,
+      "issues_score": 0
+    },
+    {
+      "breed_name": "Kankrej",
+      "total_images": 214,
+      "irrelevant_files": [
+        "kankarej_80.ini"
+      ],
+      "file_type_distribution": {
+        ".jpg": 213,
+        ".png": 1
+      },
+      "sample_images": [
+        "kankarej_32.jpg",
+        "Kankrej_093.jpg",
+        "kankarej_52.jpg",
+        "kankarej_34.jpg",
+        "Kankrej_013.jpg",
+        "Kankrej_048.jpg",
+        "Kankrej_067.jpg",
+        "Kankrej_018.jpg",
+        "Kankrej_121.jpg",
+        "Kankrej_084.jpg"
+      ],
+      "duplicates": {},
+      "small_files": [],
+      "large_files": [],
+      "min_size": 10992,
+      "max_size": 1822274,
+      "avg_size": 83802,
+      "issues_score": 1
+    },
+    {
+      "breed_name": "Kasargod",
+      "total_images": 81,
+      "irrelevant_files": [],
+      "file_type_distribution": {
+        ".jpg": 81
+      },
+      "sample_images": [
+        "Kasargod_067.jpg",
+        "Kasargod_023.jpg",
+        "Kasargod_094.jpg",
+        "Kasargod_019.jpg",
+        "Kasargod_088.jpg",
+        "Kasargod_057.jpg",
+        "Kasargod_060.jpg",
+        "Kasargod_082.jpg",
+        "000023.jpg",
+        "000008.jpg"
+      ],
+      "duplicates": {},
+      "small_files": [],
+      "large_files": [],
+      "min_size": 12105,
+      "max_size": 455116,
+      "avg_size": 49065,
+      "issues_score": 0
+    },
+    {
+      "breed_name": "Kenkatha",
+      "total_images": 58,
+      "irrelevant_files": [],
+      "file_type_distribution": {
+        ".jpg": 58
+      },
+      "sample_images": [
+        "Kenkatha_033.jpg",
+        "Kenkatha_052.jpg",
+        "Kenkatha_003.jpg",
+        "Kenkatha_043.jpg",
+        "Kenkatha_038.jpg",
+        "000008.jpg",
+        "Kenkatha_025.jpg",
+        "Kenkatha_032.jpg",
+        "000026.jpg",
+        "Kenkatha_023.jpg"
+      ],
+      "duplicates": {},
+      "small_files": [],
+      "large_files": [],
+      "min_size": 12384,
+      "max_size": 316135,
+      "avg_size": 59187,
+      "issues_score": 0
+    },
+    {
+      "breed_name": "Kherigarh",
+      "total_images": 44,
+      "irrelevant_files": [],
+      "file_type_distribution": {
+        ".jpg": 44
+      },
+      "sample_images": [
+        "000018.jpg",
+        "000025.jpg",
+        "000001.jpg",
+        "000021.jpg",
+        "Kherigarh_001.jpg",
+        "000014.jpg",
+        "000011.jpg",
+        "Kherigarh_032.jpg",
+        "Kherigarh_014.jpg",
+        "Kherigarh_023.jpg"
+      ],
+      "duplicates": {},
+      "small_files": [],
+      "large_files": [],
+      "min_size": 10639,
+      "max_size": 408195,
+      "avg_size": 72302,
+      "issues_score": 2
+    },
+    {
+      "breed_name": "Khillari",
+      "total_images": 111,
+      "irrelevant_files": [],
+      "file_type_distribution": {
+        ".jpg": 111
+      },
+      "sample_images": [
+        "Khillari_093.jpg",
+        "000015.jpg",
+        "Khillari_075.jpg",
+        "000007.jpg",
+        "Khillari_015.jpg",
+        "Khillari_080.jpg",
+        "Khillari_011.jpg",
+        "000048.jpg",
+        "000022.jpg",
+        "Khillari_081.jpg"
+      ],
+      "duplicates": {},
+      "small_files": [],
+      "large_files": [],
+      "min_size": 12472,
+      "max_size": 760746,
+      "avg_size": 64960,
+      "issues_score": 0
+    },
+    {
+      "breed_name": "Krishna_Valley",
+      "total_images": 116,
+      "irrelevant_files": [],
+      "file_type_distribution": {
+        ".jpg": 116
+      },
+      "sample_images": [
+        "000007.jpg",
+        "Krishna_Valley_039.jpg",
+        "Krishna_Valley_029.jpg",
+        "Krishna_Valley_063.jpg",
+        "Krishna_Valley_067.jpg",
+        "Krishna_Valley_032.jpg",
+        "Krishna_Valley_121.jpg",
+        "Krishna_Valley_015.jpg",
+        "Krishna_Valley_089.jpg",
+        "Krishna_Valley_100.jpg"
+      ],
+      "duplicates": {},
+      "small_files": [],
+      "large_files": [],
+      "min_size": 11182,
+      "max_size": 2581643,
+      "avg_size": 82706,
+      "issues_score": 0
+    },
+    {
+      "breed_name": "Malnad_gidda",
+      "total_images": 110,
+      "irrelevant_files": [],
+      "file_type_distribution": {
+        ".jpg": 110
+      },
+      "sample_images": [
+        "Malnad_gidda_025.jpg",
+        "000026.jpg",
+        "Malnad_gidda_013.jpg",
+        "000030.jpg",
+        "000052.jpg",
+        "000040.jpg",
+        "000035.jpg",
+        "Malnad_gidda_092.jpg",
+        "Malnad_gidda_094.jpg",
+        "Malnad_gidda_058.jpg"
+      ],
+      "duplicates": {},
+      "small_files": [],
+      "large_files": [],
+      "min_size": 12710,
+      "max_size": 1041212,
+      "avg_size": 73312,
+      "issues_score": 0
+    },
+    {
+      "breed_name": "Mehsana",
+      "total_images": 165,
+      "irrelevant_files": [],
+      "file_type_distribution": {
+        ".jpg": 128,
+        ".png": 34,
+        ".jpeg": 3
+      },
+      "sample_images": [
+        "mehsana_0100.jpeg",
+        "000015.jpg",
+        "mehsana_0055.jpg",
+        "mehsana_0024.png",
+        "mehsana_0083.jpg",
+        "Mehsana_013.jpg",
+        "mehsana_0017.png",
+        "mehsana_0014.png",
+        "Mehsana_085.jpg",
+        "Mehsana_059.jpg"
+      ],
+      "duplicates": {},
+      "small_files": [],
+      "large_files": [],
+      "min_size": 10299,
+      "max_size": 2904882,
+      "avg_size": 374718,
+      "issues_score": 0
+    },
+    {
+      "breed_name": "Murrah",
+      "total_images": 271,
+      "irrelevant_files": [],
+      "file_type_distribution": {
+        ".jpg": 252,
+        ".jpeg": 11,
+        ".png": 8
+      },
+      "sample_images": [
+        "murrah_0106.jpg",
+        "murrah_0071.jpg",
+        "Murrah_013.jpg",
+        "Murrah_006.jpg",
+        "murrah_0090.jpeg",
+        "murrah_0110.jpg",
+        "Murrah_002.jpg",
+        "Murrah_069.jpg",
+        "murrah_0153.jpg",
+        "Murrah_121.jpg"
+      ],
+      "duplicates": {},
+      "small_files": [],
+      "large_files": [],
+      "min_size": 10311,
+      "max_size": 2583319,
+      "avg_size": 94367,
+      "issues_score": 0
+    },
+    {
+      "breed_name": "Nagori",
+      "total_images": 60,
+      "irrelevant_files": [],
+      "file_type_distribution": {
+        ".jpg": 60
+      },
+      "sample_images": [
+        "Nagori_083.jpg",
+        "Nagori_086.jpg",
+        "Nagori_004.jpg",
+        "Nagori_027.jpg",
+        "Nagori_064.jpg",
+        "Nagori_015.jpg",
+        "Nagori_032.jpg",
+        "Nagori_021.jpg",
+        "Nagori_046.jpg",
+        "Nagori_024.jpg"
+      ],
+      "duplicates": {},
+      "small_files": [],
+      "large_files": [],
+      "min_size": 11233,
+      "max_size": 38493,
+      "avg_size": 22342,
+      "issues_score": 0
+    },
+    {
+      "breed_name": "Nagpuri",
+      "total_images": 320,
+      "irrelevant_files": [],
+      "file_type_distribution": {
+        ".jpg": 293,
+        ".png": 23,
+        ".gif": 2,
+        ".jpeg": 2
+      },
+      "sample_images": [
+        "nagpuri_0090.png",
+        "nagpuri_0038.jpg",
+        "Nagpuri_065.jpg",
+        "Nagpuri_026.jpg",
+        "nagpuri_0116.jpg",
+        "nagpuri_0177.jpg",
+        "image_259x194_34.jpg",
+        "000034.jpg",
+        "Nagpuri_129.jpg",
+        "Nagpuri_183.jpg"
+      ],
+      "duplicates": {},
+      "small_files": [],
+      "large_files": [],
+      "min_size": 10255,
+      "max_size": 8297439,
+      "avg_size": 76476,
+      "issues_score": 0
+    },
+    {
+      "breed_name": "Nili_Ravi",
+      "total_images": 196,
+      "irrelevant_files": [],
+      "file_type_distribution": {
+        ".jpg": 190,
+        ".png": 4,
+        ".jpeg": 1,
+        ".gif": 1
+      },
+      "sample_images": [
+        "nili_ravi_0089.jpg",
+        "Nili_Ravi_Buffalo_-_Nili_Ravi_Buffalo_ (2).jpg",
+        "nili_ravi_0096.jpg",
+        "Nili_Ravi_Female_Calf_Niliravi.jpg",
+        "Nili_Ravi_036.jpg",
+        "nili_ravi_0022.png",
+        "nili_ravi_0046.jpg",
+        "nili_ravi_0031.jpg",
+        "nili_ravi_0025.jpg",
+        "nili_ravi_0047.jpg"
+      ],
+      "duplicates": {
+        "da70fca3a1502cf76e715dbd917060aa": [
+          "000011.jpg",
+          "nili_ravi_0069.jpg"
+        ],
+        "7e21787f68d031e4aaad548071ae3acd": [
+          "000013.jpg",
+          "nili_ravi_0015.jpg"
+        ],
+        "2946cfa888bec10c659da55eaaad0030": [
+          "000016.jpg",
+          "nili_ravi_0044.jpg"
+        ],
+        "f33fd3d42ccf34c12761c520bb65d368": [
+          "000039.jpg",
+          "nili_ravi_0026.jpg"
+        ],
+        "5388ff820a9ce5dc2c8686e38d1383e9": [
+          "000070.jpg",
+          "nili_ravi_0051.jpg"
+        ]
+      },
+      "small_files": [],
+      "large_files": [],
+      "min_size": 10283,
+      "max_size": 2234221,
+      "avg_size": 95415,
+      "issues_score": 10
+    },
+    {
+      "breed_name": "Nimari",
+      "total_images": 58,
+      "irrelevant_files": [],
+      "file_type_distribution": {
+        ".jpg": 58
+      },
+      "sample_images": [
+        "Nimari_006.jpg",
+        "Nimari_057.jpg",
+        "Nimari_014.jpg",
+        "Nimari_064.jpg",
+        "Nimari_053.jpg",
+        "Nimari_002.jpg",
+        "Nimari_047.jpg",
+        "Nimari_075.jpg",
+        "Nimari_004.jpg",
+        "Nimari_060.jpg"
+      ],
+      "duplicates": {},
+      "small_files": [],
+      "large_files": [],
+      "min_size": 15815,
+      "max_size": 31995,
+      "avg_size": 23518,
+      "issues_score": 0
+    },
+    {
+      "breed_name": "Ongole",
+      "total_images": 127,
+      "irrelevant_files": [],
+      "file_type_distribution": {
+        ".jpg": 127
+      },
+      "sample_images": [
+        "Ongole_091.jpg",
+        "Ongole_092.jpg",
+        "Ongole_032.jpg",
+        "Ongole_029.jpg",
+        "Ongole_173.jpg",
+        "Ongole_063.jpg",
+        "Ongole_034.jpg",
+        "Ongole_170.jpg",
+        "Ongole_175.jpg",
+        "Ongole_040.jpg"
+      ],
+      "duplicates": {},
+      "small_files": [],
+      "large_files": [],
+      "min_size": 11092,
+      "max_size": 31580,
+      "avg_size": 21913,
+      "issues_score": 0
+    },
+    {
+      "breed_name": "Pulikulam",
+      "total_images": 87,
+      "irrelevant_files": [],
+      "file_type_distribution": {
+        ".jpg": 87
+      },
+      "sample_images": [
+        "Pulikulam_019.jpg",
+        "Pulikulam_047.jpg",
+        "Pulikulam_095.jpg",
+        "Pulikulam_045.jpg",
+        "Pulikulam_072.jpg",
+        "Pulikulam_115.jpg",
+        "Pulikulam_105.jpg",
+        "Pulikulam_037.jpg",
+        "Pulikulam_066.jpg",
+        "Pulikulam_060.jpg"
+      ],
+      "duplicates": {},
+      "small_files": [],
+      "large_files": [],
+      "min_size": 12085,
+      "max_size": 39384,
+      "avg_size": 26243,
+      "issues_score": 0
+    },
+    {
+      "breed_name": "Rathi",
+      "total_images": 103,
+      "irrelevant_files": [],
+      "file_type_distribution": {
+        ".jpg": 103
+      },
+      "sample_images": [
+        "Rathi_068.jpg",
+        "Rathi_107.jpg",
+        "Rathi_125.jpg",
+        "Rathi_088.jpg",
+        "Rathi_086.jpg",
+        "Rathi_133.jpg",
+        "Rathi_055.jpg",
+        "Rathi_114.jpg",
+        "Rathi_139.jpg",
+        "Rathi_082.jpg"
+      ],
+      "duplicates": {},
+      "small_files": [],
+      "large_files": [],
+      "min_size": 12176,
+      "max_size": 37404,
+      "avg_size": 24252,
+      "issues_score": 0
+    },
+    {
+      "breed_name": "Red_Dane",
+      "total_images": 116,
+      "irrelevant_files": [],
+      "file_type_distribution": {
+        ".jpg": 116
+      },
+      "sample_images": [
+        "Red_Dane_129.jpg",
+        "Red_Dane_111.jpg",
+        "Red_Dane_117.jpg",
+        "Red_Dane_022.jpg",
+        "Red_Dane_059.jpg",
+        "Red_Dane_004.jpg",
+        "Red_Dane_037.jpg",
+        "Red_Dane_049.jpg",
+        "Red_Dane_136.jpg",
+        "Red_Dane_166.jpg"
+      ],
+      "duplicates": {},
+      "small_files": [],
+      "large_files": [],
+      "min_size": 10953,
+      "max_size": 34868,
+      "avg_size": 23115,
+      "issues_score": 0
+    },
+    {
+      "breed_name": "Red_Sindhi",
+      "total_images": 115,
+      "irrelevant_files": [],
+      "file_type_distribution": {
+        ".jpg": 115
+      },
+      "sample_images": [
+        "Red_Sindhi_109.jpg",
+        "Red_Sindhi_153.jpg",
+        "Red_Sindhi_083.jpg",
+        "Red_Sindhi_151.jpg",
+        "Red_Sindhi_053.jpg",
+        "Red_Sindhi_162.jpg",
+        "Red_Sindhi_107.jpg",
+        "Red_Sindhi_006.jpg",
+        "Red_Sindhi_026.jpg",
+        "Red_Sindhi_043.jpg"
+      ],
+      "duplicates": {},
+      "small_files": [],
+      "large_files": [],
+      "min_size": 13066,
+      "max_size": 37093,
+      "avg_size": 23491,
+      "issues_score": 0
+    },
+    {
+      "breed_name": "Sahiwal",
+      "total_images": 416,
+      "irrelevant_files": [],
+      "file_type_distribution": {
+        ".jpg": 383,
+        ".png": 28,
+        ".webp": 4,
+        ".jpeg": 1
+      },
+      "sample_images": [
+        "sahiwal_73.jpg",
+        "Sahiwal_270.jpg",
+        "sahiwal_155.jpg",
+        "sahiwal_146.jpg",
+        "Sahiwal_121.jpg",
+        "000047.jpg",
+        "Sahiwal_259.jpg",
+        "sahiwal_97.png",
+        "Sahiwal_430.jpg",
+        "sahiwal_11.jpg"
+      ],
+      "duplicates": {},
+      "small_files": [],
+      "large_files": [],
+      "min_size": 11009,
+      "max_size": 3054933,
+      "avg_size": 163420,
+      "issues_score": 0
+    },
+    {
+      "breed_name": "Surti",
+      "total_images": 166,
+      "irrelevant_files": [],
+      "file_type_distribution": {
+        ".jpg": 149,
+        ".gif": 4,
+        ".png": 12,
+        ".jpeg": 1
+      },
+      "sample_images": [
+        "000066.jpg",
+        "Surti_013.jpg",
+        "surti_0071.jpg",
+        "000061.jpg",
+        "000071.jpg",
+        "Surti_004.jpg",
+        "surti_0065.gif",
+        "Surti_049.jpg",
+        "Surti_054.jpg",
+        "000059.jpg"
+      ],
+      "duplicates": {
+        "299765b5b012fe0404957e6349c46f77": [
+          "surti_0025.gif",
+          "surti_0065.gif"
+        ]
+      },
+      "small_files": [],
+      "large_files": [],
+      "min_size": 10266,
+      "max_size": 1990818,
+      "avg_size": 132345,
+      "issues_score": 2
+    },
+    {
+      "breed_name": "Tharparkar",
+      "total_images": 150,
+      "irrelevant_files": [],
+      "file_type_distribution": {
+        ".jpg": 150
+      },
+      "sample_images": [
+        "Tharparkar_056.jpg",
+        "Tharparkar_100.jpg",
+        "Tharparkar_175.jpg",
+        "Tharparkar_180.jpg",
+        "Tharparkar_046.jpg",
+        "Tharparkar_164.jpg",
+        "Tharparkar_019.jpg",
+        "Tharparkar_160.jpg",
+        "Tharparkar_129.jpg",
+        "Tharparkar_207.jpg"
+      ],
+      "duplicates": {},
+      "small_files": [],
+      "large_files": [],
+      "min_size": 12200,
+      "max_size": 37053,
+      "avg_size": 21625,
+      "issues_score": 0
+    },
+    {
+      "breed_name": "Toda",
+      "total_images": 170,
+      "irrelevant_files": [],
+      "file_type_distribution": {
+        ".jpg": 169,
+        ".jpeg": 1
+      },
+      "sample_images": [
+        "Toda_037.jpg",
+        "Toda_122.jpg",
+        "Toda_074.jpg",
+        "image_275x183_48.jpg",
+        "image_300x168_10.jpg",
+        "000007.jpg",
+        "000001.jpg",
+        "Toda_057.jpg",
+        "Toda_033.jpg",
+        "Toda_021.jpg"
+      ],
+      "duplicates": {},
+      "small_files": [],
+      "large_files": [],
+      "min_size": 10257,
+      "max_size": 4264045,
+      "avg_size": 94681,
+      "issues_score": 0
+    },
+    {
+      "breed_name": "Umblachery",
+      "total_images": 53,
+      "irrelevant_files": [],
+      "file_type_distribution": {
+        ".jpg": 53
+      },
+      "sample_images": [
+        "Umblachery_001.jpg",
+        "Umblachery_028.jpg",
+        "Umblachery_006.jpg",
+        "Umblachery_011.jpg",
+        "Umblachery_061.jpg",
+        "Umblachery_076.jpg",
+        "Umblachery_032.jpg",
+        "Umblachery_051.jpg",
+        "Umblachery_035.jpg",
+        "Umblachery_041.jpg"
+      ],
+      "duplicates": {},
+      "small_files": [],
+      "large_files": [],
+      "min_size": 13481,
+      "max_size": 34087,
+      "avg_size": 21557,
+      "issues_score": 0
+    },
+    {
+      "breed_name": "Vechur",
+      "total_images": 98,
+      "irrelevant_files": [],
+      "file_type_distribution": {
+        ".jpg": 98
+      },
+      "sample_images": [
+        "Vechur_114.jpg",
+        "Vechur_093.jpg",
+        "Vechur_005.jpg",
+        "Vechur_056.jpg",
+        "Vechur_126.jpg",
+        "Vechur_016.jpg",
+        "Vechur_062.jpg",
+        "Vechur_007.jpg",
+        "Vechur_011.jpg",
+        "Vechur_092.jpg"
+      ],
+      "duplicates": {},
+      "small_files": [],
+      "large_files": [],
+      "min_size": 15124,
+      "max_size": 36828,
+      "avg_size": 25546,
+      "issues_score": 0
+    }
+  ],
+  "top_10_inconsistent": [
+    "Nili_Ravi",
+    "Kherigarh",
+    "Surti",
+    "Bargur",
+    "Holstein_Friesian",
+    "Kankrej",
+    "Alambadi",
+    "Amritmahal",
+    "Ayrshire",
+    "Banni"
+  ],
+  "top_10_clean": [
+    "Alambadi",
+    "Amritmahal",
+    "Ayrshire",
+    "Banni",
+    "Bhadawari",
+    "Brown_Swiss",
+    "Dangi",
+    "Deoni",
+    "Gir",
+    "Guernsey"
+  ]
+}

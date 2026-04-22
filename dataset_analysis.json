@@ -1,0 +1,241 @@
+{
+  "original_breeds": 41,
+  "original_images": 8780,
+  "breed_counts": {
+    "Alambadi": {
+      "train": 221,
+      "val": 47,
+      "test": 49
+    },
+    "Amritmahal": {
+      "train": 88,
+      "val": 18,
+      "test": 20
+    },
+    "Ayrshire": {
+      "train": 173,
+      "val": 37,
+      "test": 38
+    },
+    "Banni": {
+      "train": 201,
+      "val": 43,
+      "test": 44
+    },
+    "Bargur": {
+      "train": 187,
+      "val": 40,
+      "test": 41
+    },
+    "Bhadawari": {
+      "train": 173,
+      "val": 37,
+      "test": 38
+    },
+    "Brown_Swiss": {
+      "train": 170,
+      "val": 36,
+      "test": 38
+    },
+    "Dangi": {
+      "train": 75,
+      "val": 16,
+      "test": 17
+    },
+    "Deoni": {
+      "train": 90,
+      "val": 19,
+      "test": 20
+    },
+    "Gir": {
+      "train": 256,
+      "val": 55,
+      "test": 56
+    },
+    "Guernsey": {
+      "train": 88,
+      "val": 18,
+      "test": 20
+    },
+    "Hallikar": {
+      "train": 156,
+      "val": 33,
+      "test": 34
+    },
+    "Hariana": {
+      "train": 109,
+      "val": 23,
+      "test": 25
+    },
+    "Holstein_Friesian": {
+      "train": 275,
+      "val": 59,
+      "test": 60
+    },
+    "Jaffrabadi": {
+      "train": 211,
+      "val": 45,
+      "test": 46
+    },
+    "Jersey": {
+      "train": 156,
+      "val": 33,
+      "test": 34
+    },
+    "Kangayam": {
+      "train": 91,
+      "val": 19,
+      "test": 20
+    },
+    "Kankrej": {
+      "train": 214,
+      "val": 46,
+      "test": 47
+    },
+    "Kasargod": {
+      "train": 81,
+      "val": 17,
+      "test": 19
+    },
+    "Kenkatha": {
+      "train": 58,
+      "val": 12,
+      "test": 14
+    },
+    "Kherigarh": {
+      "train": 44,
+      "val": 9,
+      "test": 11
+    },
+    "Khillari": {
+      "train": 111,
+      "val": 23,
+      "test": 25
+    },
+    "Krishna_Valley": {
+      "train": 116,
+      "val": 25,
+      "test": 26
+    },
+    "Malnad_gidda": {
+      "train": 110,
+      "val": 23,
+      "test": 25
+    },
+    "Mehsana": {
+      "train": 165,
+      "val": 35,
+      "test": 37
+    },
+    "Murrah": {
+      "train": 271,
+      "val": 58,
+      "test": 59
+    },
+    "Nagori": {
+      "train": 60,
+      "val": 12,
+      "test": 14
+    },
+    "Nagpuri": {
+      "train": 320,
+      "val": 68,
+      "test": 70
+    },
+    "Nili_Ravi": {
+      "train": 196,
+      "val": 42,
+      "test": 42
+    },
+    "Nimari": {
+      "train": 58,
+      "val": 12,
+      "test": 14
+    },
+    "Ongole": {
+      "train": 127,
+      "val": 27,
+      "test": 28
+    },
+    "Pulikulam": {
+      "train": 87,
+      "val": 18,
+      "test": 20
+    },
+    "Rathi": {
+      "train": 103,
+      "val": 22,
+      "test": 23
+    },
+    "Red_Dane": {
+      "train": 116,
+      "val": 24,
+      "test": 26
+    },
+    "Red_Sindhi": {
+      "train": 115,
+      "val": 24,
+      "test": 26
+    },
+    "Sahiwal": {
+      "train": 416,
+      "val": 89,
+      "test": 89
+    },
+    "Surti": {
+      "train": 166,
+      "val": 35,
+      "test": 37
+    },
+    "Tharparkar": {
+      "train": 150,
+      "val": 32,
+      "test": 33
+    },
+    "Toda": {
+      "train": 170,
+      "val": 36,
+      "test": 38
+    },
+    "Umblachery": {
+      "train": 53,
+      "val": 11,
+      "test": 12
+    },
+    "Vechur": {
+      "train": 98,
+      "val": 21,
+      "test": 21
+    }
+  },
+  "breeds_to_remove": [
+    "Kherigarh",
+    "Umblachery",
+    "Kenkatha",
+    "Nimari",
+    "Nagori"
+  ],
+  "merges": [
+    [
+      "Red_Cattle",
+      [
+        "Red_Dane",
+        "Red_Sindhi"
+      ]
+    ],
+    [
+      "South_Draft",
+      [
+        "Hallikar",
+        "Amritmahal"
+      ]
+    ],
+    [
+      "Draft_Breed",
+      [
+        "Kankrej",
+        "Kangayam"
+      ]
+    ]
+  ]
+}

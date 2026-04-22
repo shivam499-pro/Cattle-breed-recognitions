@@ -1,19 +1,32 @@
-﻿# Models (too large for git - use Git LFS)
+﻿# ================================
+# DATASET (NEVER PUSH)
+# ================================
+data/
+
+# ================================
+# MODELS (LARGE FILES)
+# ================================
 *.h5
 *.keras
 *.pt
 *.tflite
 *.onnx
+
+models/final_optimized/
+models/saved/
 models/checkpoints/
 models/logs/
 
-# Data - DON'T PUSH to git (use Kaggle/Google Drive)
-data/train/*
-data/val/*
-data/raw/*
-!data/train/.gitkeep
+# ================================
+# RESULTS / OUTPUTS
+# ================================
+results/
+logs/
+*.log
 
-# Python
+# ================================
+# PYTHON CACHE / BUILD
+# ================================
 __pycache__/
 *.pyc
 *.pyo
@@ -25,39 +38,45 @@ __pycache__/
 dist/
 build/
 
-# Virtual environments
+# ================================
+# VIRTUAL ENVIRONMENTS
+# ================================
 venv/
 env/
 .venv/
 
-# IDE
+# ================================
+# IDE / EDITOR FILES
+# ================================
 .vscode/
 .idea/
 *.swp
 *.swo
 
-# OS
+# ================================
+# OS FILES
+# ================================
 .DS_Store
 Thumbs.db
+desktop.ini
 
-# Environment
+# ================================
+# ENVIRONMENT VARIABLES
+# ================================
 .env
 .env.local
 
-# Notebooks (keep only specific ones)
+# ================================
+# NOTEBOOKS (KEEP ONLY PROJECT ONES)
+# ================================
 *.ipynb
 !notebooks/*.ipynb
 
-# Images (downloaded data)
-*.jpg
-*.jpeg
-*.png
-*.bmp
-
-# Logs
-*.log
-logs/
-
-# Temp files
+# ================================
+# TEMP FILES
+# ================================
 *.tmp
 temp/
+
+# YOLO / inference outputs
+runs/
